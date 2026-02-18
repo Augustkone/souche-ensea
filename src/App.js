@@ -87,7 +87,6 @@ function Select({ value, onChange, options, label }) {
 // PAGE LOGIN
 // ============================================================
 function LoginPage({ onLogin }) {
-  const [matricule, setMatricule] = useState("");
   const [nom, setNom] = useState("");
   const [classe, setClasse] = useState("ISE1");
   const [isDelegate, setIsDelegate] = useState(false);
@@ -97,8 +96,8 @@ function LoginPage({ onLogin }) {
   const DELEGATE_CODE = "ENSEA2024";
 
   const handleLogin = () => {
-    if (!matricule.trim() || !nom.trim()) {
-      setError("Veuillez remplir tous les champs.");
+    if (!nom.trim()) {
+      setError("Veuillez entrer votre nom.");
       return;
     }
     if (isDelegate && delegateCode !== DELEGATE_CODE) {
@@ -106,7 +105,6 @@ function LoginPage({ onLogin }) {
       return;
     }
     onLogin({
-      matricule: matricule.trim().toUpperCase(),
       nom: nom.trim().toUpperCase(),
       classe,
       role: isDelegate ? "delegate" : "etudiant"
@@ -129,18 +127,6 @@ function LoginPage({ onLogin }) {
 
         <Card>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, display: "block", marginBottom: 6 }}>Matricule</label>
-              <input
-                value={matricule} onChange={e => setMatricule(e.target.value)}
-                placeholder="Ex: 2021001"
-                style={{
-                  width: "100%", border: "2px solid #eee", borderRadius: 10,
-                  padding: "10px 14px", fontSize: 14, fontFamily: "inherit",
-                  outline: "none", boxSizing: "border-box"
-                }}
-              />
-            </div>
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, display: "block", marginBottom: 6 }}>Nom complet</label>
               <input
@@ -198,7 +184,7 @@ function LoginPage({ onLogin }) {
 function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
   const moisActuel = new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
   const maDemandeActuelle = demandes.find(
-    d => d.matricule === user.matricule && d.mois === getCurrentMois()
+    d => d.nom === user.nom && d.classe === user.classe && d.mois === getCurrentMois()
   );
 
   const [nbSouches, setNbSouches] = useState("1");
@@ -294,8 +280,7 @@ function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
 
   const demandesMois = demandes.filter(d => d.mois === moisActuel);
   const demandesFiltrees = demandesMois.filter(d => {
-    const matchRecherche = d.nom.toLowerCase().includes(recherche.toLowerCase()) ||
-      d.matricule.includes(recherche);
+    const matchRecherche = d.nom.toLowerCase().includes(recherche.toLowerCase());
     const matchClasse = classeFiltre === "TOUTES" || d.classe === classeFiltre;
     return matchRecherche && matchClasse;
   });
@@ -307,12 +292,12 @@ function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
   const showNotification = demandesMois.length >= 3;
 
   const exportCSV = () => {
-    const header = "Matricule,Nom,Classe,Souches,Tickets,Montant Dû,Montant Payé,Monnaie\n";
+    const header = "Nom,Classe,Souches,Tickets,Montant Dû,Montant Payé,Monnaie\n";
     const rows = demandesFiltrees.map(d => {
       const montantDu = d.nbSouches * PRIX_SOUCHE;
       const montantPaye = d.montantPaye || 0;
       const monnaie = montantPaye - montantDu;
-      return `${d.matricule},${d.nom},${d.classe},${d.nbSouches},${d.nbSouches * 10},${montantDu},${montantPaye},${monnaie}`;
+      return `${d.nom},${d.classe},${d.nbSouches},${d.nbSouches * 10},${montantDu},${montantPaye},${monnaie}`;
     }).join("\n");
     const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -397,7 +382,7 @@ function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <input
             value={recherche} onChange={e => setRecherche(e.target.value)}
-            placeholder="🔍 Rechercher par nom ou matricule..."
+            placeholder="🔍 Rechercher par nom..."
             style={{
               border: "2px solid #eee", borderRadius: 10, padding: "10px 14px",
               fontSize: 14, fontFamily: "inherit", outline: "none"
@@ -436,7 +421,7 @@ function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
                   }}>{i + 1}</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 14 }}>{d.nom}</div>
-                    <div style={{ fontSize: 12, color: "#888" }}>{d.matricule} · {d.classe}</div>
+                    <div style={{ fontSize: 12, color: "#888" }}>{d.classe}</div>
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
@@ -592,7 +577,7 @@ export default function App() {
 
   const handleDemander = async (nbSouches) => {
     const mois = getCurrentMois();
-    const dejaFait = demandes.find(d => d.matricule === user.matricule && d.mois === mois);
+    const dejaFait = demandes.find(d => d.nom === user.nom && d.classe === user.classe && d.mois === mois);
     if (dejaFait) { 
       showNotif("Tu as déjà une demande ce mois.", "error"); 
       return; 
@@ -600,7 +585,6 @@ export default function App() {
 
     try {
       await addDoc(collection(db, "demandes"), {
-        matricule: user.matricule,
         nom: user.nom,
         classe: user.classe,
         nbSouches,
