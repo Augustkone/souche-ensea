@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+iimport { useState, useEffect } from "react";
 import { db } from "./firebase";
 import { collection, addDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 
@@ -84,7 +84,7 @@ function Select({ value, onChange, options, label }) {
 function LoginPage({ onLogin }) {
   const [matricule, setMatricule] = useState("");
   const [nom, setNom] = useState("");
-  const [classe, setClasse] = useState("ING1");
+  const [classe, setClasse] = useState("ISE1");
   const [isDelegate, setIsDelegate] = useState(false);
   const [delegateCode, setDelegateCode] = useState("");
   const [error, setError] = useState("");
@@ -152,7 +152,7 @@ function LoginPage({ onLogin }) {
               label="Classe"
               value={classe}
               onChange={setClasse}
-              options={["ING1", "ING2", "ING3", "ING4", "ING5", "LICENCE"].map(c => ({ value: c, label: c }))}
+              options={["ISE1", "ISE2", "ISE3", "AS1", "AS2", "AS3"].map(c => ({ value: c, label: c }))}
             />
 
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
