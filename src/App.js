@@ -289,6 +289,7 @@ function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
   const [recherche, setRecherche] = useState("");
   const [classeFiltre, setClasseFiltre] = useState("TOUTES");
   const [montantsPayes, setMontantsPayes] = useState({});
+  const [showResetMenu, setShowResetMenu] = useState(false);
   const moisActuel = getCurrentMois();
 
   const demandesMois = demandes.filter(d => d.mois === moisActuel);
@@ -303,7 +304,6 @@ function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
   const totalMontant = demandesMois.reduce((sum, d) => sum + (d.nbSouches * PRIX_SOUCHE), 0);
   const classes = [...new Set(demandesMois.map(d => d.classe))];
 
-  // Notification si plus de 3 demandes
   const showNotification = demandesMois.length >= 3;
 
   const exportCSV = () => {
@@ -329,6 +329,21 @@ function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
   const handleSavePaiement = async (demande) => {
     const montant = parseInt(montantsPayes[demande.id] || 0);
     await onUpdatePaiement(demande.id, montant);
+  };
+
+  const handleResetClasse = async (classe) => {
+    const nbDemandes = demandesMois.filter(d => d.classe === classe).length;
+    if (window.confirm(`Réinitialiser les ${nbDemandes} demande(s) de la classe ${classe} ?`)) {
+      await onReset(classe);
+      setShowResetMenu(false);
+    }
+  };
+
+  const handleResetAll = async () => {
+    if (window.confirm(`Réinitialiser TOUTES les ${demandesMois.length} demandes du mois ?`)) {
+      await onReset(null);
+      setShowResetMenu(false);
+    }
   };
 
   return (
@@ -484,9 +499,44 @@ function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
 
       {demandesMois.length > 0 && (
         <div style={{ marginTop: 16 }}>
-          <Button variant="danger" onClick={onReset} style={{ width: "100%" }}>
-            🔄 Réinitialiser pour le prochain mois
+          <Button
+            variant="danger"
+            onClick={() => setShowResetMenu(!showResetMenu)}
+            style={{ width: "100%" }}
+          >
+            🔄 Réinitialiser {showResetMenu ? "▲" : "▼"}
           </Button>
+
+          {showResetMenu && (
+            <Card style={{ marginTop: 12, background: "#ffe5e5" }}>
+              <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: "#cc0000" }}>
+                ⚠️ Choisir quelle classe réinitialiser :
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {classes.sort().map(classe => {
+                  const nbClasse = demandesMois.filter(d => d.classe === classe).length;
+                  return (
+                    <Button
+                      key={classe}
+                      variant="secondary"
+                      onClick={() => handleResetClasse(classe)}
+                      style={{ justifyContent: "space-between", display: "flex" }}
+                    >
+                      <span>📚 {classe}</span>
+                      <span style={{ color: "#cc0000", fontWeight: 900 }}>({nbClasse} demande{nbClasse > 1 ? "s" : ""})</span>
+                    </Button>
+                  );
+                })}
+                <Button
+                  variant="danger"
+                  onClick={handleResetAll}
+                  style={{ marginTop: 8 }}
+                >
+                  🔥 Réinitialiser TOUTES les classes ({demandesMois.length} demandes)
+                </Button>
+              </div>
+            </Card>
+          )}
         </div>
       )}
     </div>
@@ -585,17 +635,23 @@ export default function App() {
     }
   };
 
-  const handleReset = async () => {
-    if (window.confirm("Réinitialiser toutes les demandes du mois ?")) {
-      try {
-        const mois = getCurrentMois();
-        const toDelete = demandes.filter(d => d.mois === mois);
-        await Promise.all(toDelete.map(d => deleteDoc(doc(db, "demandes", d.id))));
-        showNotif("Données réinitialisées !");
-      } catch (error) {
-        console.error("Erreur:", error);
-        showNotif("Erreur lors de la réinitialisation.", "error");
+  const handleReset = async (classe) => {
+    try {
+      const mois = getCurrentMois();
+      const toDelete = classe 
+        ? demandes.filter(d => d.mois === mois && d.classe === classe)
+        : demandes.filter(d => d.mois === mois);
+      
+      await Promise.all(toDelete.map(d => deleteDoc(doc(db, "demandes", d.id))));
+      
+      if (classe) {
+        showNotif(`Classe ${classe} réinitialisée !`);
+      } else {
+        showNotif("Toutes les classes réinitialisées !");
       }
+    } catch (error) {
+      console.error("Erreur:", error);
+      showNotif("Erreur lors de la réinitialisation.", "error");
     }
   };
 
