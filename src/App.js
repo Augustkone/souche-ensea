@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { db } from "./firebase";
-import { collection, addDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
+
+// ============================================================
+// CONSTANTES
+// ============================================================
+const PRIX_SOUCHE = 2000; // Prix en FCFA
 
 // ============================================================
 // COMPOSANTS UI
@@ -228,6 +233,7 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
       <Card style={{ marginBottom: 16, background: "#fffbf5", border: "1px solid #FFD9C7" }}>
         <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>
           📌 <strong>Règle :</strong> Chaque étudiant peut commander <strong>au maximum 3 souches</strong> (paquets de 10 tickets) par mois.
+          <br />💰 <strong>Prix :</strong> {PRIX_SOUCHE} FCFA par souche
         </div>
       </Card>
 
@@ -240,8 +246,11 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
           <div style={{ fontSize: 32, fontWeight: 900, color: "#FF6B35", margin: "8px 0" }}>
             {maDemandeActuelle.nbSouches} souche{maDemandeActuelle.nbSouches > 1 ? "s" : ""}
           </div>
-          <div style={{ fontSize: 12, color: "#888", marginBottom: 16 }}>
+          <div style={{ fontSize: 12, color: "#888", marginBottom: 8 }}>
             Soit {maDemandeActuelle.nbSouches * 10} tickets de cantine
+          </div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: "#007a3d", marginBottom: 16 }}>
+            💰 Total à payer : {maDemandeActuelle.nbSouches * PRIX_SOUCHE} FCFA
           </div>
           <Button variant="danger" onClick={() => onAnnuler(maDemandeActuelle.id)} style={{ width: "100%" }} disabled={loading}>
             Annuler ma demande
@@ -255,9 +264,9 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
             value={nbSouches}
             onChange={setNbSouches}
             options={[
-              { value: "1", label: "1 souche (10 tickets)" },
-              { value: "2", label: "2 souches (20 tickets)" },
-              { value: "3", label: "3 souches (30 tickets)" },
+              { value: "1", label: `1 souche (10 tickets) - ${PRIX_SOUCHE} FCFA` },
+              { value: "2", label: `2 souches (20 tickets) - ${PRIX_SOUCHE * 2} FCFA` },
+              { value: "3", label: `3 souches (30 tickets) - ${PRIX_SOUCHE * 3} FCFA` },
             ]}
           />
           <Button
@@ -276,9 +285,10 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
 // ============================================================
 // PAGE DÉLÉGUÉ
 // ============================================================
-function DelegatePage({ user, demandes, onReset }) {
+function DelegatePage({ user, demandes, onReset, onUpdatePaiement }) {
   const [recherche, setRecherche] = useState("");
   const [classeFiltre, setClasseFiltre] = useState("TOUTES");
+  const [montantsPayes, setMontantsPayes] = useState({});
   const moisActuel = getCurrentMois();
 
   const demandesMois = demandes.filter(d => d.mois === moisActuel);
@@ -290,13 +300,20 @@ function DelegatePage({ user, demandes, onReset }) {
   });
 
   const totalSouches = demandesMois.reduce((sum, d) => sum + d.nbSouches, 0);
+  const totalMontant = demandesMois.reduce((sum, d) => sum + (d.nbSouches * PRIX_SOUCHE), 0);
   const classes = [...new Set(demandesMois.map(d => d.classe))];
 
+  // Notification si plus de 3 demandes
+  const showNotification = demandesMois.length >= 3;
+
   const exportCSV = () => {
-    const header = "Matricule,Nom,Classe,Souches,Tickets\n";
-    const rows = demandesFiltrees.map(d =>
-      `${d.matricule},${d.nom},${d.classe},${d.nbSouches},${d.nbSouches * 10}`
-    ).join("\n");
+    const header = "Matricule,Nom,Classe,Souches,Tickets,Montant Dû,Montant Payé,Monnaie\n";
+    const rows = demandesFiltrees.map(d => {
+      const montantDu = d.nbSouches * PRIX_SOUCHE;
+      const montantPaye = d.montantPaye || 0;
+      const monnaie = montantPaye - montantDu;
+      return `${d.matricule},${d.nom},${d.classe},${d.nbSouches},${d.nbSouches * 10},${montantDu},${montantPaye},${monnaie}`;
+    }).join("\n");
     const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -305,22 +322,54 @@ function DelegatePage({ user, demandes, onReset }) {
     a.click();
   };
 
+  const handleMontantChange = (demandeId, value) => {
+    setMontantsPayes(prev => ({ ...prev, [demandeId]: value }));
+  };
+
+  const handleSavePaiement = async (demande) => {
+    const montant = parseInt(montantsPayes[demande.id] || 0);
+    await onUpdatePaiement(demande.id, montant);
+  };
+
   return (
-    <div style={{ padding: 20, maxWidth: 600, margin: "0 auto", fontFamily: "'Syne', sans-serif" }}>
+    <div style={{ padding: 20, maxWidth: 700, margin: "0 auto", fontFamily: "'Syne', sans-serif" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <Logo />
-        <Badge color="#6B35FF">Délégué</Badge>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {showNotification && (
+            <div style={{
+              background: "#cc0000", color: "#fff", borderRadius: 20,
+              padding: "6px 12px", fontSize: 12, fontWeight: 700,
+              animation: "pulse 2s infinite"
+            }}>
+              🔔 {demandesMois.length} demandes
+            </div>
+          )}
+          <Badge color="#6B35FF">Délégué</Badge>
+        </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+      `}</style>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 16 }}>
         <Card style={{ background: "linear-gradient(135deg, #FF6B35, #e55a25)", color: "#fff" }}>
           <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Étudiants</div>
           <div style={{ fontSize: 36, fontWeight: 900 }}>{demandesMois.length}</div>
         </Card>
         <Card style={{ background: "linear-gradient(135deg, #1a1a2e, #16213e)", color: "#fff" }}>
-          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Total Souches</div>
+          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Souches</div>
           <div style={{ fontSize: 36, fontWeight: 900 }}>{totalSouches}</div>
           <div style={{ fontSize: 11, opacity: 0.7 }}>{totalSouches * 10} tickets</div>
+        </Card>
+        <Card style={{ background: "linear-gradient(135deg, #007a3d, #005a2d)", color: "#fff" }}>
+          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Montant</div>
+          <div style={{ fontSize: 28, fontWeight: 900 }}>{totalMontant.toLocaleString()}</div>
+          <div style={{ fontSize: 11, opacity: 0.7 }}>FCFA</div>
         </Card>
       </div>
 
@@ -355,25 +404,82 @@ function DelegatePage({ user, demandes, onReset }) {
           <Card style={{ textAlign: "center", color: "#888", padding: 40 }}>
             Aucune demande pour ce mois.
           </Card>
-        ) : demandesFiltrees.map((d, i) => (
-          <Card key={d.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 10, background: "#FF6B3520",
-                color: "#FF6B35", display: "flex", alignItems: "center", justifyContent: "center",
-                fontWeight: 900, fontSize: 14
-              }}>{i + 1}</div>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 14 }}>{d.nom}</div>
-                <div style={{ fontSize: 12, color: "#888" }}>{d.matricule} · {d.classe}</div>
+        ) : demandesFiltrees.map((d, i) => {
+          const montantDu = d.nbSouches * PRIX_SOUCHE;
+          const montantPaye = d.montantPaye || 0;
+          const monnaie = montantPaye - montantDu;
+          const montantSaisi = montantsPayes[d.id] !== undefined ? montantsPayes[d.id] : montantPaye;
+
+          return (
+            <Card key={d.id}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{
+                    width: 36, height: 36, borderRadius: 10, background: "#FF6B3520",
+                    color: "#FF6B35", display: "flex", alignItems: "center", justifyContent: "center",
+                    fontWeight: 900, fontSize: 14
+                  }}>{i + 1}</div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>{d.nom}</div>
+                    <div style={{ fontSize: 12, color: "#888" }}>{d.matricule} · {d.classe}</div>
+                  </div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: "#FF6B35" }}>{d.nbSouches}</div>
+                  <div style={{ fontSize: 11, color: "#888" }}>souche{d.nbSouches > 1 ? "s" : ""}</div>
+                </div>
               </div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "#FF6B35" }}>{d.nbSouches}</div>
-              <div style={{ fontSize: 11, color: "#888" }}>souche{d.nbSouches > 1 ? "s" : ""}</div>
-            </div>
-          </Card>
-        ))}
+
+              <div style={{ background: "#f8f8f8", borderRadius: 10, padding: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>MONTANT DÛ</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: "#007a3d" }}>{montantDu.toLocaleString()} F</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>MONTANT PAYÉ</div>
+                    <input
+                      type="number"
+                      value={montantSaisi}
+                      onChange={e => handleMontantChange(d.id, e.target.value)}
+                      placeholder="0"
+                      style={{
+                        width: "100%", border: "2px solid #007a3d", borderRadius: 8,
+                        padding: "6px 10px", fontSize: 16, fontWeight: 700, color: "#007a3d",
+                        outline: "none", boxSizing: "border-box"
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {montantSaisi && montantSaisi !== "" && (
+                  <div style={{
+                    background: monnaie > 0 ? "#e5f5ee" : monnaie < 0 ? "#ffe5e5" : "#fff",
+                    borderRadius: 8, padding: 10, marginBottom: 10
+                  }}>
+                    <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>MONNAIE À RENDRE</div>
+                    <div style={{
+                      fontSize: 20, fontWeight: 900,
+                      color: monnaie > 0 ? "#007a3d" : monnaie < 0 ? "#cc0000" : "#888"
+                    }}>
+                      {monnaie > 0 ? "+" : ""}{monnaie.toLocaleString()} FCFA
+                    </div>
+                  </div>
+                )}
+
+                {montantSaisi !== montantPaye && (
+                  <Button
+                    onClick={() => handleSavePaiement(d)}
+                    variant="success"
+                    style={{ width: "100%", padding: "8px 16px", fontSize: 13 }}
+                  >
+                    💾 Enregistrer le paiement
+                  </Button>
+                )}
+              </div>
+            </Card>
+          );
+        })}
       </div>
 
       {demandesMois.length > 0 && (
@@ -408,9 +514,26 @@ export default function App() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setDemandes(data);
+      
+      // Notification navigateur si plus de 3 demandes
+      if (user?.role === "delegate" && data.filter(d => d.mois === getCurrentMois()).length >= 3) {
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification("SoucheApp", {
+            body: `${data.filter(d => d.mois === getCurrentMois()).length} demandes de souches en attente`,
+            icon: "/logo192.png"
+          });
+        }
+      }
     });
     return unsubscribe;
-  }, []);
+  }, [user]);
+
+  // Demander la permission pour les notifications
+  useEffect(() => {
+    if (user?.role === "delegate" && "Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, [user]);
 
   const showNotif = (msg, type = "success") => {
     setNotification({ msg, type });
@@ -432,7 +555,8 @@ export default function App() {
         classe: user.classe,
         nbSouches,
         mois,
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
+        montantPaye: 0
       });
       showNotif(`✅ Demande de ${nbSouches} souche(s) enregistrée !`);
     } catch (error) {
@@ -448,6 +572,16 @@ export default function App() {
     } catch (error) {
       console.error("Erreur:", error);
       showNotif("Erreur lors de l'annulation.", "error");
+    }
+  };
+
+  const handleUpdatePaiement = async (demandeId, montantPaye) => {
+    try {
+      await updateDoc(doc(db, "demandes", demandeId), { montantPaye });
+      showNotif("💰 Paiement enregistré !");
+    } catch (error) {
+      console.error("Erreur:", error);
+      showNotif("Erreur lors de l'enregistrement du paiement.", "error");
     }
   };
 
@@ -484,7 +618,7 @@ export default function App() {
       {!user ? (
         <LoginPage onLogin={setUser} />
       ) : user.role === "delegate" ? (
-        <DelegatePage user={user} demandes={demandes} onReset={handleReset} />
+        <DelegatePage user={user} demandes={demandes} onReset={handleReset} onUpdatePaiement={handleUpdatePaiement} />
       ) : (
         <EtudiantPage user={user} demandes={demandes} onDemander={handleDemander} onAnnuler={handleAnnuler} />
       )}
