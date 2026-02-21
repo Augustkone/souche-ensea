@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { db, getConfig, verifyAdmin, verifyDelegue, getEtudiantsByClasse, getAllEtudiants, getAllDelegues } from "./firebase";
 import { collection, addDoc, deleteDoc, doc, onSnapshot, updateDoc, writeBatch, getDocs, query, where } from "firebase/firestore";
-import { hashCode, verifyCode } from "./utils/hash";
+import { hashCode } from "./utils/hash";
 import * as XLSX from 'xlsx';
 
 // ============================================================
@@ -112,7 +112,8 @@ function LoginPage({ onLogin }) {
     if (classe && mode === "etudiant") {
       loadEtudiants();
     }
-  }, [classe]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [classe, mode]);
 
   const loadConfig = async () => {
     const cfg = await getConfig();
@@ -865,14 +866,13 @@ function AdminPage({ user, demandes, onArchiveMois, onDeleteMois, onResetCompteu
   const [etudiants, setEtudiants] = useState([]);
   const [delegues, setDelegues] = useState([]);
   const [config, setConfig] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadData = async () => {
-    setLoading(true);
     const [etds, dels, cfg] = await Promise.all([
       getAllEtudiants(),
       getAllDelegues(),
@@ -881,7 +881,6 @@ function AdminPage({ user, demandes, onArchiveMois, onDeleteMois, onResetCompteu
     setEtudiants(etds);
     setDelegues(dels);
     setConfig(cfg);
-    setLoading(false);
   };
 
   return (
@@ -1272,7 +1271,7 @@ function AdminHistorique({ demandes, config }) {
                 </tr>
               </thead>
               <tbody>
-                {demandesFiltrees.map((d, i) => (
+                {demandesFiltrees.map((d) => (
                   <tr key={d.id} style={{ borderBottom: "1px solid #f0f0f0" }}>
                     <td style={{ padding: 12 }}>{d.date ? new Date(d.date).toLocaleDateString('fr-FR') : "-"}</td>
                     <td style={{ padding: 12, fontWeight: 600 }}>{d.nom}</td>
@@ -1442,7 +1441,7 @@ function AdminExports({ demandes, etudiants, config }) {
 }
 
 // ============================================================
-// ADMIN - ÉTUDIANTS (AVEC CHOIX REMPLACER/AJOUTER + EXCEL)
+// ADMIN - ÉTUDIANTS
 // ============================================================
 function AdminEtudiants({ etudiants, config, onReload }) {
   const [importing, setImporting] = useState(false);
@@ -1520,7 +1519,7 @@ function AdminEtudiants({ etudiants, config, onReload }) {
     try {
       if (modeImport === "remplacer") {
         const allEtudiants = await getDocs(collection(db, "etudiants"));
-        const deletePromises = allEtudiants.docs.map(doc => deleteDoc(doc.ref));
+        const deletePromises = allEtudiants.docs.map(d => deleteDoc(d.ref));
         await Promise.all(deletePromises);
       }
 
