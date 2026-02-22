@@ -18,15 +18,15 @@ function Logo() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
       <div style={{
-        width: 50, height: 50, borderRadius: 12,
-        background: "linear-gradient(135deg, #FF6B35, #F7C59F)",
+        width: 55, height: 55, borderRadius: 14,
+        background: "linear-gradient(135deg, #0047AB, #0066CC)",
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 24, fontWeight: 900, color: "#fff", letterSpacing: -1,
-        boxShadow: "0 4px 12px rgba(255, 107, 53, 0.3)"
+        fontSize: 26, fontWeight: 900, color: "#fff", letterSpacing: -1,
+        boxShadow: "0 6px 20px rgba(0, 71, 171, 0.35)"
       }}>E</div>
       <div>
-        <div style={{ fontSize: 20, fontWeight: 800, color: "#1a1a2e", letterSpacing: -0.5 }}>SoucheApp</div>
-        <div style={{ fontSize: 9, color: "#888", letterSpacing: 0.5, textTransform: "uppercase", lineHeight: 1.3 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: "#002D6F", letterSpacing: -0.5 }}>SoucheApp</div>
+        <div style={{ fontSize: 9, color: "#0066CC", letterSpacing: 0.5, textTransform: "uppercase", lineHeight: 1.3, fontWeight: 600 }}>
           École Nationale Supérieure<br/>de la Statistique et de l'Économie Appliquée
         </div>
       </div>
@@ -34,11 +34,11 @@ function Logo() {
   );
 }
 
-function Badge({ children, color = "#FF6B35" }) {
+function Badge({ children, color = "#0047AB" }) {
   return (
     <span style={{
-      background: color + "20", color, border: `1px solid ${color}50`,
-      borderRadius: 20, padding: "4px 12px", fontSize: 11, fontWeight: 700,
+      background: color + "15", color, border: `2px solid ${color}`,
+      borderRadius: 25, padding: "6px 16px", fontSize: 11, fontWeight: 700,
       letterSpacing: 0.5, textTransform: "uppercase"
     }}>{children}</span>
   );
@@ -47,8 +47,8 @@ function Badge({ children, color = "#FF6B35" }) {
 function Card({ children, style = {} }) {
   return (
     <div style={{
-      background: "#fff", borderRadius: 16, padding: 24,
-      boxShadow: "0 2px 20px rgba(0,0,0,0.08)", border: "1px solid #f0f0f0",
+      background: "#fff", borderRadius: 18, padding: 28,
+      boxShadow: "0 4px 24px rgba(0, 71, 171, 0.08)", border: "1px solid #E8F4FF",
       ...style
     }}>{children}</div>
   );
@@ -56,16 +56,17 @@ function Card({ children, style = {} }) {
 
 function Button({ children, onClick, variant = "primary", style = {}, disabled = false }) {
   const base = {
-    border: "none", borderRadius: 12, padding: "14px 28px", fontSize: 14,
+    border: "none", borderRadius: 14, padding: "14px 28px", fontSize: 14,
     fontWeight: 700, cursor: disabled ? "not-allowed" : "pointer",
-    fontFamily: "inherit", transition: "all 0.2s", opacity: disabled ? 0.5 : 1,
+    fontFamily: "inherit", transition: "all 0.3s", opacity: disabled ? 0.5 : 1,
+    boxShadow: variant === "primary" ? "0 4px 16px rgba(0, 71, 171, 0.25)" : "none",
     ...style
   };
   const variants = {
-    primary: { background: "linear-gradient(135deg, #FF6B35, #e55a25)", color: "#fff", boxShadow: "0 4px 12px rgba(255, 107, 53, 0.3)" },
-    secondary: { background: "#f5f5f5", color: "#333" },
-    danger: { background: "#ffe5e5", color: "#cc0000" },
-    success: { background: "#e5f5ee", color: "#007a3d" },
+    primary: { background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" },
+    secondary: { background: "#F5F8FA", color: "#002D6F", border: "2px solid #E8F4FF" },
+    danger: { background: "#FFF0F0", color: "#DC2626", border: "2px solid #FEE" },
+    success: { background: "#F0FDF4", color: "#16A34A", border: "2px solid #DCFCE7" },
   };
   return (
     <button style={{ ...base, ...variants[variant] }} onClick={onClick} disabled={disabled}>
@@ -77,10 +78,10 @@ function Button({ children, onClick, variant = "primary", style = {}, disabled =
 function Select({ value, onChange, options, label }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      {label && <label style={{ fontSize: 12, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</label>}
+      {label && <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</label>}
       <select value={value} onChange={e => onChange(e.target.value)} style={{
-        border: "2px solid #eee", borderRadius: 10, padding: "12px 16px",
-        fontSize: 14, color: "#333", background: "#fff", fontFamily: "inherit",
+        border: "2px solid #E8F4FF", borderRadius: 12, padding: "12px 16px",
+        fontSize: 14, color: "#002D6F", background: "#fff", fontFamily: "inherit",
         outline: "none", cursor: "pointer"
       }}>
         {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -200,14 +201,14 @@ function LoginPage({ onLogin }) {
   return (
     <div style={{
       minHeight: "100vh", 
-      background: "linear-gradient(160deg, #fff8f5 0%, #fff 60%)",
+      background: "linear-gradient(160deg, #E8F4FF 0%, #ffffff 60%)",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
       padding: 20, fontFamily: "'Syne', sans-serif"
     }}>
-      <div style={{ width: "100%", maxWidth: 440 }}>
+      <div style={{ width: "100%", maxWidth: 460 }}>
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <Logo />
-          <p style={{ color: "#666", marginTop: 16, fontSize: 15, lineHeight: 1.6 }}>
+          <p style={{ color: "#0066CC", marginTop: 20, fontSize: 15, lineHeight: 1.6, fontWeight: 500 }}>
             Système de réservation de souches<br/>de tickets de cantine
           </p>
         </div>
@@ -217,21 +218,21 @@ function LoginPage({ onLogin }) {
             <Button
               variant={mode === "etudiant" ? "primary" : "secondary"}
               onClick={() => setMode("etudiant")}
-              style={{ flex: 1, padding: "10px 16px" }}
+              style={{ flex: 1, padding: "12px 16px" }}
             >
               👨‍🎓 Étudiant
             </Button>
             <Button
               variant={mode === "delegue" ? "primary" : "secondary"}
               onClick={() => setMode("delegue")}
-              style={{ flex: 1, padding: "10px 16px" }}
+              style={{ flex: 1, padding: "12px 16px" }}
             >
               👥 Délégué
             </Button>
             <Button
               variant={mode === "admin" ? "primary" : "secondary"}
               onClick={() => setMode("admin")}
-              style={{ flex: 1, padding: "10px 16px" }}
+              style={{ flex: 1, padding: "12px 16px" }}
             >
               👔 Admin
             </Button>
@@ -259,7 +260,7 @@ function LoginPage({ onLogin }) {
                 </p>
               )}
 
-              {error && <p style={{ color: "#cc0000", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
+              {error && <p style={{ color: "#DC2626", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
 
               <Button onClick={handleLoginEtudiant} style={{ width: "100%", marginTop: 8 }} disabled={etudiants.length === 0}>
                 Se connecter →
@@ -270,21 +271,21 @@ function LoginPage({ onLogin }) {
           {mode === "delegue" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, display: "block", marginBottom: 6 }}>Code délégué</label>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", textTransform: "uppercase", letterSpacing: 0.5, display: "block", marginBottom: 6 }}>Code délégué</label>
                 <input
                   type="password"
                   value={code}
                   onChange={e => setCode(e.target.value)}
                   placeholder="Entrez votre code"
                   style={{
-                    width: "100%", border: "2px solid #eee", borderRadius: 10,
+                    width: "100%", border: "2px solid #E8F4FF", borderRadius: 12,
                     padding: "12px 16px", fontSize: 14, fontFamily: "inherit",
                     outline: "none", boxSizing: "border-box"
                   }}
                 />
               </div>
 
-              {error && <p style={{ color: "#cc0000", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
+              {error && <p style={{ color: "#DC2626", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
 
               <Button onClick={handleLoginDelegue} style={{ width: "100%", marginTop: 8 }} disabled={loading}>
                 {loading ? "⏳ Connexion..." : "Se connecter →"}
@@ -295,21 +296,21 @@ function LoginPage({ onLogin }) {
           {mode === "admin" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, display: "block", marginBottom: 6 }}>Code administrateur</label>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", textTransform: "uppercase", letterSpacing: 0.5, display: "block", marginBottom: 6 }}>Code administrateur</label>
                 <input
                   type="password"
                   value={code}
                   onChange={e => setCode(e.target.value)}
                   placeholder="Entrez votre code"
                   style={{
-                    width: "100%", border: "2px solid #eee", borderRadius: 10,
+                    width: "100%", border: "2px solid #E8F4FF", borderRadius: 12,
                     padding: "12px 16px", fontSize: 14, fontFamily: "inherit",
                     outline: "none", boxSizing: "border-box"
                   }}
                 />
               </div>
 
-              {error && <p style={{ color: "#cc0000", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
+              {error && <p style={{ color: "#DC2626", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
 
               <Button onClick={handleLoginAdmin} style={{ width: "100%", marginTop: 8 }} disabled={loading}>
                 {loading ? "⏳ Connexion..." : "Se connecter →"}
@@ -369,44 +370,57 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
   }
 
   return (
-    <div style={{ padding: 20, maxWidth: 520, margin: "0 auto", fontFamily: "'Syne', sans-serif" }}>
+    <div style={{ padding: 20, maxWidth: 540, margin: "0 auto", fontFamily: "'Syne', sans-serif" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
         <Logo />
         <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 12, color: "#888" }}>{user.classe}</div>
-          <div style={{ fontSize: 14, fontWeight: 700 }}>{user.nom}</div>
+          <div style={{ fontSize: 12, color: "#0066CC", fontWeight: 600 }}>{user.classe}</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "#002D6F" }}>{user.nom}</div>
         </div>
       </div>
 
-      <Card style={{ marginBottom: 16, background: "linear-gradient(135deg, #FF6B35, #e55a25)", color: "#fff" }}>
-        <div style={{ fontSize: 12, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Mois en cours</div>
-        <div style={{ fontSize: 24, fontWeight: 800, textTransform: "capitalize" }}>{moisActuel}</div>
-        <div style={{ marginTop: 12, fontSize: 14, opacity: 0.9 }}>
+      <Card style={{ marginBottom: 16, background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" }}>
+        <div style={{ fontSize: 12, opacity: 0.9, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4, fontWeight: 600 }}>Mois en cours</div>
+        <div style={{ fontSize: 26, fontWeight: 800, textTransform: "capitalize" }}>{moisActuel}</div>
+        <div style={{ marginTop: 14, fontSize: 14, opacity: 0.95 }}>
           📋 {totalDemandes} demande(s) au total
         </div>
       </Card>
 
-      <Card style={{ marginBottom: 16, background: totalSouchesCommandees >= MAX_SOUCHES_PAR_MOIS ? "#ffe5e5" : "#e5f5ee", border: `2px solid ${totalSouchesCommandees >= MAX_SOUCHES_PAR_MOIS ? "#cc0000" : "#007a3d"}` }}>
-        <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 10, color: totalSouchesCommandees >= MAX_SOUCHES_PAR_MOIS ? "#cc0000" : "#007a3d" }}>
+      <Card style={{ 
+        marginBottom: 16, 
+        background: totalSouchesCommandees >= MAX_SOUCHES_PAR_MOIS ? "#FFF0F0" : "#F0FDF4", 
+        border: `2px solid ${totalSouchesCommandees >= MAX_SOUCHES_PAR_MOIS ? "#FEE" : "#DCFCE7"}` 
+      }}>
+        <div style={{ 
+          fontSize: 14, 
+          fontWeight: 700, 
+          marginBottom: 10, 
+          color: totalSouchesCommandees >= MAX_SOUCHES_PAR_MOIS ? "#DC2626" : "#16A34A" 
+        }}>
           📊 Votre compteur ce mois
         </div>
-        <div style={{ fontSize: 48, fontWeight: 900, color: totalSouchesCommandees >= MAX_SOUCHES_PAR_MOIS ? "#cc0000" : "#007a3d" }}>
+        <div style={{ 
+          fontSize: 52, 
+          fontWeight: 900, 
+          color: totalSouchesCommandees >= MAX_SOUCHES_PAR_MOIS ? "#DC2626" : "#16A34A" 
+        }}>
           {totalSouchesCommandees} / {MAX_SOUCHES_PAR_MOIS}
         </div>
-        <div style={{ fontSize: 13, color: "#555", marginTop: 8 }}>
+        <div style={{ fontSize: 13, color: "#555", marginTop: 10 }}>
           {peutCommander ? (
             <>Vous pouvez encore commander <strong>{souchesRestantes} souche{souchesRestantes > 1 ? "s" : ""}</strong></>
           ) : (
             <><strong>Limite atteinte !</strong> Vous ne pouvez plus commander ce mois.</>
           )}
         </div>
-        <div style={{ fontSize: 11, color: "#888", marginTop: 12, fontStyle: "italic" }}>
+        <div style={{ fontSize: 11, color: "#0066CC", marginTop: 14, fontStyle: "italic", fontWeight: 500 }}>
           ℹ️ Le compteur se remet automatiquement à 0 chaque nouveau mois
         </div>
       </Card>
 
-      <Card style={{ marginBottom: 16, background: "#fffbf5", border: "1px solid #FFD9C7" }}>
-        <div style={{ fontSize: 13, color: "#555", lineHeight: 1.7 }}>
+      <Card style={{ marginBottom: 16, background: "#F5F8FA", border: "2px solid #E8F4FF" }}>
+        <div style={{ fontSize: 13, color: "#002D6F", lineHeight: 1.7 }}>
           📌 <strong>Règle importante :</strong> 
           <ul style={{ marginTop: 8, marginBottom: 0, paddingLeft: 20 }}>
             <li>Maximum <strong>{MAX_SOUCHES_PAR_MOIS} souches par mois</strong></li>
@@ -418,20 +432,21 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
 
       {mesDemandesActives.length > 0 && (
         <Card style={{ marginBottom: 16 }}>
-          <div style={{ fontWeight: 800, fontSize: 17, marginBottom: 14 }}>Mes demandes en attente ({mesDemandesActives.length})</div>
+          <div style={{ fontWeight: 800, fontSize: 17, marginBottom: 14, color: "#002D6F" }}>Mes demandes en attente ({mesDemandesActives.length})</div>
           {mesDemandesActives.map((d, i) => (
             <div key={d.id} style={{
               padding: 14,
-              background: "#f8f8f8",
-              borderRadius: 10,
+              background: "#F5F8FA",
+              borderRadius: 12,
               marginBottom: 10,
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "center"
+              alignItems: "center",
+              border: "2px solid #E8F4FF"
             }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700 }}>Demande #{i + 1}</div>
-                <div style={{ fontSize: 13, color: "#888" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#002D6F" }}>Demande #{i + 1}</div>
+                <div style={{ fontSize: 13, color: "#0066CC" }}>
                   {d.nbSouches} souche{d.nbSouches > 1 ? "s" : ""} = {d.nbSouches * PRIX_SOUCHE} FCFA
                 </div>
               </div>
@@ -449,7 +464,7 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
 
       {peutCommander ? (
         <Card>
-          <div style={{ fontWeight: 800, fontSize: 17, marginBottom: 16 }}>Nouvelle demande</div>
+          <div style={{ fontWeight: 800, fontSize: 17, marginBottom: 16, color: "#002D6F" }}>Nouvelle demande</div>
           <Select
             label="Nombre de souches"
             value={nbSouches}
@@ -458,8 +473,8 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
           />
           
           {error && (
-            <div style={{ background: "#ffe5e5", padding: 12, borderRadius: 10, marginTop: 16 }}>
-              <p style={{ fontSize: 13, color: "#cc0000", margin: 0, fontWeight: 600 }}>
+            <div style={{ background: "#FFF0F0", padding: 12, borderRadius: 12, marginTop: 16, border: "2px solid #FEE" }}>
+              <p style={{ fontSize: 13, color: "#DC2626", margin: 0, fontWeight: 600 }}>
                 ⚠️ {error}
               </p>
             </div>
@@ -474,10 +489,10 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler }) {
           </Button>
         </Card>
       ) : (
-        <Card style={{ background: "#ffe5e5", border: "2px solid #cc0000" }}>
+        <Card style={{ background: "#FFF0F0", border: "2px solid #FEE" }}>
           <div style={{ textAlign: "center", padding: "20px 0" }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>🚫</div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "#cc0000", marginBottom: 8 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "#DC2626", marginBottom: 8 }}>
               Limite mensuelle atteinte
             </div>
             <div style={{ fontSize: 14, color: "#555" }}>
@@ -556,44 +571,45 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
   };
 
   return (
-    <div style={{ padding: 20, maxWidth: 800, margin: "0 auto", fontFamily: "'Syne', sans-serif" }}>
+    <div style={{ padding: 20, maxWidth: 850, margin: "0 auto", fontFamily: "'Syne', sans-serif" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
         <Logo />
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {showNotification && (
             <div style={{
-              background: "#cc0000", color: "#fff", borderRadius: 20,
-              padding: "6px 14px", fontSize: 12, fontWeight: 700,
-              animation: "pulse 2s infinite"
+              background: "#0047AB", color: "#fff", borderRadius: 25,
+              padding: "8px 16px", fontSize: 12, fontWeight: 700,
+              animation: "pulse 2s infinite",
+              boxShadow: "0 4px 12px rgba(0, 71, 171, 0.3)"
             }}>
               🔔 {demandesMois.length} demandes
             </div>
           )}
-          <Badge color="#6B35FF">Délégué {user.classe}</Badge>
+          <Badge color="#0066CC">Délégué {user.classe}</Badge>
         </div>
       </div>
 
       <style>{`
         @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.7; }
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.05); }
         }
       `}</style>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 20 }}>
-        <Card style={{ background: "linear-gradient(135deg, #FF6B35, #e55a25)", color: "#fff" }}>
-          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Demandes</div>
-          <div style={{ fontSize: 40, fontWeight: 900 }}>{demandesMois.length}</div>
+        <Card style={{ background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" }}>
+          <div style={{ fontSize: 11, opacity: 0.9, textTransform: "uppercase", letterSpacing: 1, fontWeight: 600 }}>Demandes</div>
+          <div style={{ fontSize: 44, fontWeight: 900 }}>{demandesMois.length}</div>
         </Card>
-        <Card style={{ background: "linear-gradient(135deg, #1a1a2e, #16213e)", color: "#fff" }}>
-          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Souches</div>
-          <div style={{ fontSize: 40, fontWeight: 900 }}>{totalSouches}</div>
-          <div style={{ fontSize: 11, opacity: 0.7 }}>{totalSouches * 10} tickets</div>
+        <Card style={{ background: "linear-gradient(135deg, #002D6F, #0047AB)", color: "#fff" }}>
+          <div style={{ fontSize: 11, opacity: 0.9, textTransform: "uppercase", letterSpacing: 1, fontWeight: 600 }}>Souches</div>
+          <div style={{ fontSize: 44, fontWeight: 900 }}>{totalSouches}</div>
+          <div style={{ fontSize: 11, opacity: 0.8 }}>{totalSouches * 10} tickets</div>
         </Card>
-        <Card style={{ background: "linear-gradient(135deg, #007a3d, #005a2d)", color: "#fff" }}>
-          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Montant</div>
-          <div style={{ fontSize: 32, fontWeight: 900 }}>{totalMontant.toLocaleString()}</div>
-          <div style={{ fontSize: 11, opacity: 0.7 }}>FCFA</div>
+        <Card style={{ background: "linear-gradient(135deg, #16A34A, #059669)", color: "#fff" }}>
+          <div style={{ fontSize: 11, opacity: 0.9, textTransform: "uppercase", letterSpacing: 1, fontWeight: 600 }}>Montant</div>
+          <div style={{ fontSize: 36, fontWeight: 900 }}>{totalMontant.toLocaleString()}</div>
+          <div style={{ fontSize: 11, opacity: 0.8 }}>FCFA</div>
         </Card>
       </div>
 
@@ -615,7 +631,7 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
           value={recherche} onChange={e => setRecherche(e.target.value)}
           placeholder="🔍 Rechercher par nom..."
           style={{
-            width: "100%", border: "2px solid #eee", borderRadius: 10, padding: "12px 16px",
+            width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "12px 16px",
             fontSize: 14, fontFamily: "inherit", outline: "none", boxSizing: "border-box"
           }}
         />
@@ -637,37 +653,37 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 14 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{
-                    width: 40, height: 40, borderRadius: 12, background: "#FF6B3520",
-                    color: "#FF6B35", display: "flex", alignItems: "center", justifyContent: "center",
-                    fontWeight: 900, fontSize: 16
+                    width: 45, height: 45, borderRadius: 14, background: "linear-gradient(135deg, #0047AB, #0066CC)",
+                    color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+                    fontWeight: 900, fontSize: 18, boxShadow: "0 4px 12px rgba(0, 71, 171, 0.25)"
                   }}>{i + 1}</div>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 15 }}>{d.nom}</div>
-                    <div style={{ fontSize: 12, color: "#888" }}>{d.classe}</div>
+                    <div style={{ fontWeight: 700, fontSize: 16, color: "#002D6F" }}>{d.nom}</div>
+                    <div style={{ fontSize: 12, color: "#0066CC", fontWeight: 600 }}>{d.classe}</div>
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 26, fontWeight: 900, color: "#FF6B35" }}>{d.nbSouches}</div>
-                  <div style={{ fontSize: 11, color: "#888" }}>souche{d.nbSouches > 1 ? "s" : ""}</div>
+                  <div style={{ fontSize: 28, fontWeight: 900, color: "#0047AB" }}>{d.nbSouches}</div>
+                  <div style={{ fontSize: 11, color: "#0066CC", fontWeight: 600 }}>souche{d.nbSouches > 1 ? "s" : ""}</div>
                 </div>
               </div>
 
-              <div style={{ background: "#f8f8f8", borderRadius: 12, padding: 16 }}>
+              <div style={{ background: "#F5F8FA", borderRadius: 14, padding: 18, border: "2px solid #E8F4FF" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 14 }}>
                   <div>
-                    <div style={{ fontSize: 11, color: "#888", marginBottom: 6 }}>MONTANT DÛ</div>
-                    <div style={{ fontSize: 20, fontWeight: 700, color: "#007a3d" }}>{montantDu.toLocaleString()} F</div>
+                    <div style={{ fontSize: 11, color: "#0066CC", marginBottom: 6, fontWeight: 700 }}>MONTANT DÛ</div>
+                    <div style={{ fontSize: 22, fontWeight: 700, color: "#16A34A" }}>{montantDu.toLocaleString()} F</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, color: "#888", marginBottom: 6 }}>MONTANT PAYÉ</div>
+                    <div style={{ fontSize: 11, color: "#0066CC", marginBottom: 6, fontWeight: 700 }}>MONTANT PAYÉ</div>
                     <input
                       type="number"
                       value={montantSaisi}
                       onChange={e => handleMontantChange(d.id, e.target.value)}
                       placeholder="0"
                       style={{
-                        width: "100%", border: "2px solid #007a3d", borderRadius: 10,
-                        padding: "8px 12px", fontSize: 18, fontWeight: 700, color: "#007a3d",
+                        width: "100%", border: "2px solid #0047AB", borderRadius: 12,
+                        padding: "10px 14px", fontSize: 20, fontWeight: 700, color: "#0047AB",
                         outline: "none", boxSizing: "border-box"
                       }}
                     />
@@ -676,13 +692,14 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
 
                 {montantSaisi && montantSaisi !== "" && (
                   <div style={{
-                    background: monnaie > 0 ? "#e5f5ee" : monnaie < 0 ? "#ffe5e5" : "#fff",
-                    borderRadius: 10, padding: 12, marginBottom: 12
+                    background: monnaie > 0 ? "#F0FDF4" : monnaie < 0 ? "#FFF0F0" : "#fff",
+                    borderRadius: 12, padding: 14, marginBottom: 12,
+                    border: `2px solid ${monnaie > 0 ? "#DCFCE7" : monnaie < 0 ? "#FEE" : "#eee"}`
                   }}>
-                    <div style={{ fontSize: 11, color: "#888", marginBottom: 6 }}>MONNAIE À RENDRE</div>
+                    <div style={{ fontSize: 11, color: "#0066CC", marginBottom: 6, fontWeight: 700 }}>MONNAIE À RENDRE</div>
                     <div style={{
-                      fontSize: 24, fontWeight: 900,
-                      color: monnaie > 0 ? "#007a3d" : monnaie < 0 ? "#cc0000" : "#888"
+                      fontSize: 26, fontWeight: 900,
+                      color: monnaie > 0 ? "#16A34A" : monnaie < 0 ? "#DC2626" : "#888"
                     }}>
                       {monnaie > 0 ? "+" : ""}{monnaie.toLocaleString()} FCFA
                     </div>
@@ -693,7 +710,7 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
                   <Button
                     onClick={() => handleSavePaiement(d)}
                     variant="success"
-                    style={{ width: "100%", padding: "10px 20px", fontSize: 14 }}
+                    style={{ width: "100%", padding: "12px 20px", fontSize: 14 }}
                   >
                     💾 Enregistrer le paiement
                   </Button>
@@ -709,21 +726,21 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
           <Button
             variant="success"
             onClick={() => setShowActionMenu(!showActionMenu)}
-            style={{ width: "100%", background: "linear-gradient(135deg, #FF9500, #FF5E3A)", color: "#fff" }}
+            style={{ width: "100%", background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" }}
           >
             ⚙️ Actions sur ma classe ({demandesMois.length} demandes) {showActionMenu ? "▲" : "▼"}
           </Button>
 
           {showActionMenu && (
-            <Card style={{ marginTop: 16, background: "#fff3e0" }}>
-              <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: "#FF9500" }}>
+            <Card style={{ marginTop: 16, background: "#E8F4FF" }}>
+              <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: "#0047AB" }}>
                 Choisir l'action :
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <Button
                   variant="success"
                   onClick={handleArchiveClasse}
-                  style={{ background: "#007a3d", color: "#fff" }}
+                  style={{ background: "#16A34A", color: "#fff" }}
                 >
                   📦 Archiver (conserve dans l'historique)
                 </Button>
@@ -734,7 +751,7 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
                   🗑️ Supprimer définitivement (pas d'historique)
                 </Button>
               </div>
-              <p style={{ fontSize: 12, color: "#888", marginTop: 12, marginBottom: 0 }}>
+              <p style={{ fontSize: 12, color: "#0066CC", marginTop: 12, marginBottom: 0 }}>
                 💡 <strong>Archiver</strong> : Les données sont conservées pour les statistiques<br/>
                 ⚠️ <strong>Supprimer</strong> : Utile pour les tests, données perdues
               </p>
@@ -790,59 +807,59 @@ function ChangePasswordModal({ user, onClose, onChangePassword }) {
   return (
     <div style={{
       position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-      background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center",
-      justifyContent: "center", zIndex: 9999, padding: 20
+      background: "rgba(0, 45, 111, 0.7)", display: "flex", alignItems: "center",
+      justifyContent: "center", zIndex: 9999, padding: 20, backdropFilter: "blur(4px)"
     }}>
-      <Card style={{ maxWidth: 440, width: "100%" }}>
+      <Card style={{ maxWidth: 460, width: "100%" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-          <h2 style={{ margin: 0, fontSize: 20 }}>🔑 Changer mon code</h2>
-          <button onClick={onClose} style={{ border: "none", background: "none", fontSize: 28, cursor: "pointer", color: "#888" }}>×</button>
+          <h2 style={{ margin: 0, fontSize: 22, color: "#002D6F" }}>🔑 Changer mon code</h2>
+          <button onClick={onClose} style={{ border: "none", background: "none", fontSize: 32, cursor: "pointer", color: "#0066CC" }}>×</button>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Code actuel</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Code actuel</label>
             <input
               type="password"
               value={codeActuel}
               onChange={e => setCodeActuel(e.target.value)}
               placeholder="Entrez votre code actuel"
               style={{
-                width: "100%", border: "2px solid #eee", borderRadius: 10,
-                padding: "12px 16px", fontSize: 14, outline: "none", boxSizing: "border-box"
+                width: "100%", border: "2px solid #E8F4FF", borderRadius: 12,
+                padding: "14px 18px", fontSize: 14, outline: "none", boxSizing: "border-box"
               }}
             />
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Nouveau code</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Nouveau code</label>
             <input
               type="password"
               value={nouveauCode}
               onChange={e => setNouveauCode(e.target.value)}
               placeholder="Minimum 6 caractères"
               style={{
-                width: "100%", border: "2px solid #eee", borderRadius: 10,
-                padding: "12px 16px", fontSize: 14, outline: "none", boxSizing: "border-box"
+                width: "100%", border: "2px solid #E8F4FF", borderRadius: 12,
+                padding: "14px 18px", fontSize: 14, outline: "none", boxSizing: "border-box"
               }}
             />
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Confirmer le nouveau code</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Confirmer le nouveau code</label>
             <input
               type="password"
               value={confirmation}
               onChange={e => setConfirmation(e.target.value)}
               placeholder="Retapez le nouveau code"
               style={{
-                width: "100%", border: "2px solid #eee", borderRadius: 10,
-                padding: "12px 16px", fontSize: 14, outline: "none", boxSizing: "border-box"
+                width: "100%", border: "2px solid #E8F4FF", borderRadius: 12,
+                padding: "14px 18px", fontSize: 14, outline: "none", boxSizing: "border-box"
               }}
             />
           </div>
 
-          {error && <p style={{ color: "#cc0000", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
+          {error && <p style={{ color: "#DC2626", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
 
           <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
             <Button onClick={handleSubmit} disabled={loading} style={{ flex: 1 }}>
@@ -861,11 +878,12 @@ function ChangePasswordModal({ user, onClose, onChangePassword }) {
 // ============================================================
 // PAGE ADMIN
 // ============================================================
-function AdminPage({ user, demandes, onArchiveMois, onDeleteMois, onResetCompteurs, onUpdatePaiement }) {
+function AdminPage({ user, demandes, onArchiveMois, onDeleteMois, onResetCompteurs, onUpdatePaiement, onChangeAdminPassword }) {
   const [tab, setTab] = useState("dashboard");
   const [etudiants, setEtudiants] = useState([]);
   const [delegues, setDelegues] = useState([]);
   const [config, setConfig] = useState(null);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -887,8 +905,21 @@ function AdminPage({ user, demandes, onArchiveMois, onDeleteMois, onResetCompteu
     <div style={{ padding: 20, maxWidth: 1400, margin: "0 auto", fontFamily: "'Syne', sans-serif" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
         <Logo />
-        <Badge color="#9B35FF">Administrateur</Badge>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Button onClick={() => setShowChangePassword(true)} variant="secondary" style={{ padding: "10px 20px" }}>
+            🔑 Changer code
+          </Button>
+          <Badge color="#0047AB">Administrateur</Badge>
+        </div>
       </div>
+
+      {showChangePassword && (
+        <ChangePasswordModal
+          user={user}
+          onClose={() => setShowChangePassword(false)}
+          onChangePassword={onChangeAdminPassword}
+        />
+      )}
 
       <div style={{ display: "flex", gap: 10, marginBottom: 24, overflowX: "auto" }}>
         <Button
@@ -1018,40 +1049,40 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
   return (
     <div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 24 }}>
-        <Card style={{ background: "linear-gradient(135deg, #FF6B35, #e55a25)", color: "#fff" }}>
-          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Demandes actives</div>
+        <Card style={{ background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" }}>
+          <div style={{ fontSize: 11, opacity: 0.9, textTransform: "uppercase", letterSpacing: 1, fontWeight: 600 }}>Demandes actives</div>
           <div style={{ fontSize: 42, fontWeight: 900 }}>{demandesMoisActives.length}</div>
         </Card>
-        <Card style={{ background: "linear-gradient(135deg, #1a1a2e, #16213e)", color: "#fff" }}>
-          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Souches</div>
+        <Card style={{ background: "linear-gradient(135deg, #002D6F, #0047AB)", color: "#fff" }}>
+          <div style={{ fontSize: 11, opacity: 0.9, textTransform: "uppercase", letterSpacing: 1, fontWeight: 600 }}>Souches</div>
           <div style={{ fontSize: 42, fontWeight: 900 }}>{totalSouches}</div>
         </Card>
-        <Card style={{ background: "linear-gradient(135deg, #007a3d, #005a2d)", color: "#fff" }}>
-          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Montant</div>
+        <Card style={{ background: "linear-gradient(135deg, #16A34A, #059669)", color: "#fff" }}>
+          <div style={{ fontSize: 11, opacity: 0.9, textTransform: "uppercase", letterSpacing: 1, fontWeight: 600 }}>Montant</div>
           <div style={{ fontSize: 32, fontWeight: 900 }}>{totalMontant.toLocaleString()}</div>
-          <div style={{ fontSize: 11, opacity: 0.7 }}>FCFA</div>
+          <div style={{ fontSize: 11, opacity: 0.8 }}>FCFA</div>
         </Card>
-        <Card style={{ background: "linear-gradient(135deg, #6B35FF, #9B35FF)", color: "#fff" }}>
-          <div style={{ fontSize: 11, opacity: 0.8, textTransform: "uppercase", letterSpacing: 1 }}>Étudiants</div>
+        <Card style={{ background: "linear-gradient(135deg, #0066CC, #0088EE)", color: "#fff" }}>
+          <div style={{ fontSize: 11, opacity: 0.9, textTransform: "uppercase", letterSpacing: 1, fontWeight: 600 }}>Étudiants</div>
           <div style={{ fontSize: 42, fontWeight: 900 }}>{etudiants.length}</div>
         </Card>
       </div>
 
       <Card style={{ marginBottom: 24 }}>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20 }}>📊 Répartition par classe (mois en cours)</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>📊 Répartition par classe (mois en cours)</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {statsByClasse.map(stat => (
             <div key={stat.classe} style={{
               display: "flex", justifyContent: "space-between", alignItems: "center",
-              padding: 16, background: "#f8f8f8", borderRadius: 12
+              padding: 16, background: "#F5F8FA", borderRadius: 14, border: "2px solid #E8F4FF"
             }}>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 16 }}>{stat.classe}</div>
-                <div style={{ fontSize: 13, color: "#888", marginTop: 4 }}>Délégué: {stat.delegue}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, color: "#002D6F" }}>{stat.classe}</div>
+                <div style={{ fontSize: 13, color: "#0066CC", marginTop: 4, fontWeight: 600 }}>Délégué: {stat.delegue}</div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: 20, fontWeight: 700, color: "#FF6B35" }}>{stat.nbDemandes} demandes</div>
-                <div style={{ fontSize: 13, color: "#888" }}>{stat.nbSouches} souches</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "#0047AB" }}>{stat.nbDemandes} demandes</div>
+                <div style={{ fontSize: 13, color: "#0066CC", fontWeight: 600 }}>{stat.nbSouches} souches</div>
               </div>
             </div>
           ))}
@@ -1062,7 +1093,7 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
         <Button
           variant="secondary"
           onClick={handleResetCompteurs}
-          style={{ flex: 1, background: "#6B35FF", color: "#fff" }}
+          style={{ flex: 1, background: "linear-gradient(135deg, #0066CC, #0088EE)", color: "#fff" }}
         >
           🔄 Réinitialiser les compteurs (Tests)
         </Button>
@@ -1073,19 +1104,19 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
           <Button
             variant="success"
             onClick={() => setShowActionMenu(!showActionMenu)}
-            style={{ width: "100%", background: "linear-gradient(135deg, #FF9500, #FF5E3A)", color: "#fff" }}
+            style={{ width: "100%", background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" }}
           >
             ⚙️ Actions globales {showActionMenu ? "▲" : "▼"}
           </Button>
 
           {showActionMenu && (
-            <Card style={{ marginTop: 16, background: "#fff3e0" }}>
-              <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: "#FF9500" }}>
+            <Card style={{ marginTop: 16, background: "#E8F4FF" }}>
+              <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: "#0047AB" }}>
                 Choisir l'action pour le mois en cours :
               </div>
               
               <div style={{ marginBottom: 20 }}>
-                <p style={{ fontSize: 13, fontWeight: 600, marginBottom: 10 }}>Par classe :</p>
+                <p style={{ fontSize: 13, fontWeight: 600, marginBottom: 10, color: "#002D6F" }}>Par classe :</p>
                 {classes.map(classe => {
                   const nbClasse = demandesMoisActives.filter(d => d.classe === classe).length;
                   if (nbClasse === 0) return null;
@@ -1094,7 +1125,7 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
                       <Button
                         variant="success"
                         onClick={() => handleArchiveClasse(classe)}
-                        style={{ flex: 1, background: "#007a3d", color: "#fff", fontSize: 13 }}
+                        style={{ flex: 1, background: "#16A34A", color: "#fff", fontSize: 13 }}
                       >
                         📦 Archiver {classe} ({nbClasse})
                       </Button>
@@ -1110,13 +1141,13 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
                 })}
               </div>
 
-              <div style={{ borderTop: "2px solid #ddd", paddingTop: 16 }}>
-                <p style={{ fontSize: 13, fontWeight: 600, marginBottom: 10 }}>Toutes les classes :</p>
+              <div style={{ borderTop: "2px solid #0066CC", paddingTop: 16 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, marginBottom: 10, color: "#002D6F" }}>Toutes les classes :</p>
                 <div style={{ display: "flex", gap: 10 }}>
                   <Button
                     variant="success"
                     onClick={handleArchiveAll}
-                    style={{ flex: 1, background: "#007a3d", color: "#fff" }}
+                    style={{ flex: 1, background: "#16A34A", color: "#fff" }}
                   >
                     📦 Archiver tout ({demandesMoisActives.length})
                   </Button>
@@ -1130,7 +1161,7 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
                 </div>
               </div>
 
-              <p style={{ fontSize: 12, color: "#888", marginTop: 12, marginBottom: 0 }}>
+              <p style={{ fontSize: 12, color: "#0066CC", marginTop: 12, marginBottom: 0 }}>
                 💡 <strong>Archiver</strong> : Conserve les données dans l'historique<br/>
                 ⚠️ <strong>Supprimer</strong> : Supprime définitivement (utile pour les tests)
               </p>
@@ -1141,7 +1172,6 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
     </div>
   );
 }
-
 // ============================================================
 // ADMIN - HISTORIQUE
 // ============================================================
@@ -1183,14 +1213,14 @@ function AdminHistorique({ demandes, config }) {
   return (
     <div>
       <Card style={{ marginBottom: 20 }}>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20 }}>🔍 Filtres</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>🔍 Filtres</h3>
         
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 6 }}>Classe</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 6 }}>Classe</label>
             <select value={filtreClasse} onChange={e => setFiltreClasse(e.target.value)} style={{
-              width: "100%", border: "2px solid #eee", borderRadius: 10, padding: "10px 14px",
-              fontSize: 14, outline: "none"
+              width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "10px 14px",
+              fontSize: 14, outline: "none", color: "#002D6F"
             }}>
               <option value="toutes">Toutes les classes</option>
               {classes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -1198,10 +1228,10 @@ function AdminHistorique({ demandes, config }) {
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 6 }}>Mois</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 6 }}>Mois</label>
             <select value={filtreMois} onChange={e => setFiltreMois(e.target.value)} style={{
-              width: "100%", border: "2px solid #eee", borderRadius: 10, padding: "10px 14px",
-              fontSize: 14, outline: "none"
+              width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "10px 14px",
+              fontSize: 14, outline: "none", color: "#002D6F"
             }}>
               <option value="tous">Tous les mois</option>
               {moisUniques.map(m => <option key={m} value={m}>{m}</option>)}
@@ -1209,28 +1239,28 @@ function AdminHistorique({ demandes, config }) {
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 6 }}>Date précise</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 6 }}>Date précise</label>
             <input 
               type="date" 
               value={filtreDate} 
               onChange={e => setFiltreDate(e.target.value)}
               style={{
-                width: "100%", border: "2px solid #eee", borderRadius: 10, padding: "10px 14px",
-                fontSize: 14, outline: "none"
+                width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "10px 14px",
+                fontSize: 14, outline: "none", color: "#002D6F"
               }}
             />
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 6 }}>Recherche nom</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 6 }}>Recherche nom</label>
             <input 
               type="text" 
               value={recherche} 
               onChange={e => setRecherche(e.target.value)}
               placeholder="Nom de l'étudiant"
               style={{
-                width: "100%", border: "2px solid #eee", borderRadius: 10, padding: "10px 14px",
-                fontSize: 14, outline: "none"
+                width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "10px 14px",
+                fontSize: 14, outline: "none", color: "#002D6F"
               }}
             />
           </div>
@@ -1238,22 +1268,22 @@ function AdminHistorique({ demandes, config }) {
       </Card>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 20 }}>
-        <Card style={{ background: "#f8f8f8" }}>
-          <div style={{ fontSize: 12, color: "#888", marginBottom: 6 }}>TOTAL DEMANDES</div>
-          <div style={{ fontSize: 32, fontWeight: 900, color: "#FF6B35" }}>{demandesFiltrees.length}</div>
+        <Card style={{ background: "#F5F8FA", border: "2px solid #E8F4FF" }}>
+          <div style={{ fontSize: 12, color: "#0066CC", marginBottom: 6, fontWeight: 700 }}>TOTAL DEMANDES</div>
+          <div style={{ fontSize: 32, fontWeight: 900, color: "#0047AB" }}>{demandesFiltrees.length}</div>
         </Card>
-        <Card style={{ background: "#f8f8f8" }}>
-          <div style={{ fontSize: 12, color: "#888", marginBottom: 6 }}>TOTAL SOUCHES</div>
-          <div style={{ fontSize: 32, fontWeight: 900, color: "#1a1a2e" }}>{totalSouches}</div>
+        <Card style={{ background: "#F5F8FA", border: "2px solid #E8F4FF" }}>
+          <div style={{ fontSize: 12, color: "#0066CC", marginBottom: 6, fontWeight: 700 }}>TOTAL SOUCHES</div>
+          <div style={{ fontSize: 32, fontWeight: 900, color: "#002D6F" }}>{totalSouches}</div>
         </Card>
-        <Card style={{ background: "#f8f8f8" }}>
-          <div style={{ fontSize: 12, color: "#888", marginBottom: 6 }}>MONTANT TOTAL</div>
-          <div style={{ fontSize: 28, fontWeight: 900, color: "#007a3d" }}>{totalMontant.toLocaleString()} F</div>
+        <Card style={{ background: "#F5F8FA", border: "2px solid #E8F4FF" }}>
+          <div style={{ fontSize: 12, color: "#0066CC", marginBottom: 6, fontWeight: 700 }}>MONTANT TOTAL</div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: "#16A34A" }}>{totalMontant.toLocaleString()} F</div>
         </Card>
       </div>
 
       <Card>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20 }}>📜 Historique ({demandesFiltrees.length} demandes)</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>📜 Historique ({demandesFiltrees.length} demandes)</h3>
         
         {demandesFiltrees.length === 0 ? (
           <p style={{ textAlign: "center", color: "#888", padding: 40 }}>Aucune demande avec ces filtres</p>
@@ -1261,30 +1291,30 @@ function AdminHistorique({ demandes, config }) {
           <div style={{ maxHeight: 600, overflow: "auto" }}>
             <table style={{ width: "100%", fontSize: 13, borderCollapse: "collapse" }}>
               <thead>
-                <tr style={{ background: "#f8f8f8", borderBottom: "2px solid #eee" }}>
-                  <th style={{ padding: 12, textAlign: "left" }}>Date</th>
-                  <th style={{ padding: 12, textAlign: "left" }}>Nom</th>
-                  <th style={{ padding: 12, textAlign: "left" }}>Classe</th>
-                  <th style={{ padding: 12, textAlign: "center" }}>Souches</th>
-                  <th style={{ padding: 12, textAlign: "right" }}>Montant</th>
-                  <th style={{ padding: 12, textAlign: "center" }}>Statut</th>
+                <tr style={{ background: "#F5F8FA", borderBottom: "2px solid #E8F4FF" }}>
+                  <th style={{ padding: 12, textAlign: "left", color: "#002D6F" }}>Date</th>
+                  <th style={{ padding: 12, textAlign: "left", color: "#002D6F" }}>Nom</th>
+                  <th style={{ padding: 12, textAlign: "left", color: "#002D6F" }}>Classe</th>
+                  <th style={{ padding: 12, textAlign: "center", color: "#002D6F" }}>Souches</th>
+                  <th style={{ padding: 12, textAlign: "right", color: "#002D6F" }}>Montant</th>
+                  <th style={{ padding: 12, textAlign: "center", color: "#002D6F" }}>Statut</th>
                 </tr>
               </thead>
               <tbody>
                 {demandesFiltrees.map((d) => (
-                  <tr key={d.id} style={{ borderBottom: "1px solid #f0f0f0" }}>
-                    <td style={{ padding: 12 }}>{d.date ? new Date(d.date).toLocaleDateString('fr-FR') : "-"}</td>
-                    <td style={{ padding: 12, fontWeight: 600 }}>{d.nom}</td>
-                    <td style={{ padding: 12 }}>{d.classe}</td>
-                    <td style={{ padding: 12, textAlign: "center", fontWeight: 700, color: "#FF6B35" }}>{d.nbSouches}</td>
-                    <td style={{ padding: 12, textAlign: "right", fontWeight: 600 }}>{(d.nbSouches * PRIX_SOUCHE).toLocaleString()} F</td>
+                  <tr key={d.id} style={{ borderBottom: "1px solid #E8F4FF" }}>
+                    <td style={{ padding: 12, color: "#002D6F" }}>{d.date ? new Date(d.date).toLocaleDateString('fr-FR') : "-"}</td>
+                    <td style={{ padding: 12, fontWeight: 600, color: "#002D6F" }}>{d.nom}</td>
+                    <td style={{ padding: 12, color: "#0066CC" }}>{d.classe}</td>
+                    <td style={{ padding: 12, textAlign: "center", fontWeight: 700, color: "#0047AB" }}>{d.nbSouches}</td>
+                    <td style={{ padding: 12, textAlign: "right", fontWeight: 600, color: "#16A34A" }}>{(d.nbSouches * PRIX_SOUCHE).toLocaleString()} F</td>
                     <td style={{ padding: 12, textAlign: "center" }}>
                       {d.statut === "traitee" ? (
-                        <span style={{ background: "#e5f5ee", color: "#007a3d", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700 }}>
+                        <span style={{ background: "#F0FDF4", color: "#16A34A", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #DCFCE7" }}>
                           ✓ TRAITÉE
                         </span>
                       ) : (
-                        <span style={{ background: "#fff3e0", color: "#FF9500", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700 }}>
+                        <span style={{ background: "#E8F4FF", color: "#0047AB", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #0066CC" }}>
                           ⏳ ACTIVE
                         </span>
                       )}
@@ -1376,14 +1406,14 @@ function AdminExports({ demandes, etudiants, config }) {
   return (
     <div>
       <Card style={{ marginBottom: 20 }}>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20 }}>🔍 Filtres pour l'export</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>🔍 Filtres pour l'export</h3>
         
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Classe</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Classe</label>
             <select value={filtreClasse} onChange={e => setFiltreClasse(e.target.value)} style={{
-              width: "100%", border: "2px solid #eee", borderRadius: 10, padding: "12px 16px",
-              fontSize: 14, outline: "none"
+              width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "12px 16px",
+              fontSize: 14, outline: "none", color: "#002D6F"
             }}>
               <option value="toutes">Toutes les classes</option>
               {classes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -1391,10 +1421,10 @@ function AdminExports({ demandes, etudiants, config }) {
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Mois</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Mois</label>
             <select value={filtreMois} onChange={e => setFiltreMois(e.target.value)} style={{
-              width: "100%", border: "2px solid #eee", borderRadius: 10, padding: "12px 16px",
-              fontSize: 14, outline: "none"
+              width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "12px 16px",
+              fontSize: 14, outline: "none", color: "#002D6F"
             }}>
               <option value="tous">Tous les mois</option>
               {moisUniques.map(m => <option key={m} value={m}>{m}</option>)}
@@ -1404,32 +1434,32 @@ function AdminExports({ demandes, etudiants, config }) {
       </Card>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-        <Card style={{ padding: 24, background: "linear-gradient(135deg, #FF6B35, #e55a25)", color: "#fff" }}>
-          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 10, opacity: 0.9 }}>DEMANDES SÉLECTIONNÉES</div>
+        <Card style={{ padding: 24, background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" }}>
+          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 10, opacity: 0.95 }}>DEMANDES SÉLECTIONNÉES</div>
           <div style={{ fontSize: 42, fontWeight: 900, marginBottom: 8 }}>{totalDemandes}</div>
-          <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 16 }}>
+          <div style={{ fontSize: 13, opacity: 0.95, marginBottom: 16 }}>
             {totalSouches} souches • {totalMontant.toLocaleString()} FCFA
           </div>
-          <Button onClick={exportGlobalExcel} variant="secondary" style={{ width: "100%", background: "#fff", color: "#FF6B35" }}>
+          <Button onClick={exportGlobalExcel} variant="secondary" style={{ width: "100%", background: "#fff", color: "#0047AB" }}>
             📥 Exporter les demandes (Excel)
           </Button>
         </Card>
 
-        <Card style={{ padding: 24, background: "linear-gradient(135deg, #6B35FF, #9B35FF)", color: "#fff" }}>
-          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 10, opacity: 0.9 }}>TOUS LES ÉTUDIANTS</div>
+        <Card style={{ padding: 24, background: "linear-gradient(135deg, #0066CC, #0088EE)", color: "#fff" }}>
+          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 10, opacity: 0.95 }}>TOUS LES ÉTUDIANTS</div>
           <div style={{ fontSize: 42, fontWeight: 900, marginBottom: 8 }}>{etudiants.length}</div>
-          <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 16 }}>
+          <div style={{ fontSize: 13, opacity: 0.95, marginBottom: 16 }}>
             Liste complète des étudiants inscrits
           </div>
-          <Button onClick={exportEtudiantsExcel} variant="secondary" style={{ width: "100%", background: "#fff", color: "#6B35FF" }}>
+          <Button onClick={exportEtudiantsExcel} variant="secondary" style={{ width: "100%", background: "#fff", color: "#0066CC" }}>
             📥 Exporter les étudiants (Excel)
           </Button>
         </Card>
       </div>
 
-      <Card style={{ marginTop: 20, background: "#e5f5ee", border: "2px solid #007a3d" }}>
-        <h4 style={{ margin: "0 0 16px 0", fontSize: 17, color: "#007a3d" }}>✅ Fonctionnalités</h4>
-        <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 2, color: "#555" }}>
+      <Card style={{ marginTop: 20, background: "#F0FDF4", border: "2px solid #DCFCE7" }}>
+        <h4 style={{ margin: "0 0 16px 0", fontSize: 17, color: "#16A34A" }}>✅ Fonctionnalités</h4>
+        <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 2, color: "#002D6F" }}>
           <li>Export en <strong>format Excel (.xlsx)</strong></li>
           <li>Filtrage par <strong>classe</strong> et par <strong>mois</strong></li>
           <li>Inclut <strong>toutes les demandes</strong> (actives + traitées)</li>
@@ -1559,17 +1589,17 @@ function AdminEtudiants({ etudiants, config, onReload }) {
   return (
     <div>
       <Card style={{ marginBottom: 24 }}>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20 }}>📥 Importer des étudiants</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>📥 Importer des étudiants</h3>
 
         {!fichier ? (
           <div>
-            <p style={{ fontSize: 13, color: "#666", marginBottom: 16 }}>
+            <p style={{ fontSize: 13, color: "#0066CC", marginBottom: 16 }}>
               Format accepté : <strong>CSV ou Excel (.xlsx, .xls)</strong><br/>
               Structure : <strong>Nom, Prenom, Classe</strong>
             </p>
             
             <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Mode d'import</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Mode d'import</label>
               <div style={{ display: "flex", gap: 10 }}>
                 <Button
                   variant={modeImport === "remplacer" ? "primary" : "secondary"}
@@ -1586,7 +1616,7 @@ function AdminEtudiants({ etudiants, config, onReload }) {
                   ➕ Ajouter
                 </Button>
               </div>
-              <p style={{ fontSize: 12, color: "#888", marginTop: 8 }}>
+              <p style={{ fontSize: 12, color: "#0066CC", marginTop: 8 }}>
                 {modeImport === "remplacer" 
                   ? "⚠️ Supprime tous les étudiants existants avant l'import" 
                   : "✅ Conserve les étudiants existants et ajoute les nouveaux"}
@@ -1602,9 +1632,9 @@ function AdminEtudiants({ etudiants, config, onReload }) {
           </div>
         ) : (
           <div>
-            <p style={{ fontSize: 14, marginBottom: 10 }}>📄 Fichier : <strong>{fichier.name}</strong></p>
-            <p style={{ fontSize: 14, marginBottom: 16 }}>✅ {etudiantsPreview.length} étudiants détectés</p>
-            <p style={{ fontSize: 13, color: modeImport === "remplacer" ? "#cc0000" : "#007a3d", marginBottom: 16, fontWeight: 600 }}>
+            <p style={{ fontSize: 14, marginBottom: 10, color: "#002D6F" }}>📄 Fichier : <strong>{fichier.name}</strong></p>
+            <p style={{ fontSize: 14, marginBottom: 16, color: "#002D6F" }}>✅ {etudiantsPreview.length} étudiants détectés</p>
+            <p style={{ fontSize: 13, color: modeImport === "remplacer" ? "#DC2626" : "#16A34A", marginBottom: 16, fontWeight: 600 }}>
               Mode : {modeImport === "remplacer" ? "🔄 REMPLACEMENT" : "➕ AJOUT"}
             </p>
 
@@ -1613,7 +1643,7 @@ function AdminEtudiants({ etudiants, config, onReload }) {
                 <div style={{
                   width: "100%",
                   height: 24,
-                  background: "#eee",
+                  background: "#E8F4FF",
                   borderRadius: 12,
                   overflow: "hidden",
                   marginBottom: 12
@@ -1621,11 +1651,11 @@ function AdminEtudiants({ etudiants, config, onReload }) {
                   <div style={{
                     width: `${progress}%`,
                     height: "100%",
-                    background: "linear-gradient(90deg, #FF6B35, #F7C59F)",
+                    background: "linear-gradient(90deg, #0047AB, #0066CC)",
                     transition: "width 0.3s"
                   }} />
                 </div>
-                <p style={{ fontSize: 14, textAlign: "center", fontWeight: 600 }}>{progress}% - Import en cours...</p>
+                <p style={{ fontSize: 14, textAlign: "center", fontWeight: 600, color: "#0047AB" }}>{progress}% - Import en cours...</p>
               </div>
             ) : (
               <div style={{ display: "flex", gap: 12 }}>
@@ -1648,7 +1678,7 @@ function AdminEtudiants({ etudiants, config, onReload }) {
       </Card>
 
       <Card>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20 }}>👨‍🎓 Liste des étudiants ({etudiants.length})</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>👨‍🎓 Liste des étudiants ({etudiants.length})</h3>
         {etudiants.length === 0 ? (
           <p style={{ color: "#888", textAlign: "center", padding: "40px 0" }}>Aucun étudiant. Importez un fichier.</p>
         ) : (
@@ -1656,18 +1686,18 @@ function AdminEtudiants({ etudiants, config, onReload }) {
             {etudiants.slice(0, 50).map(e => (
               <div key={e.id} style={{
                 padding: 14,
-                borderBottom: "1px solid #eee",
+                borderBottom: "1px solid #E8F4FF",
                 display: "flex",
                 justifyContent: "space-between"
               }}>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 15 }}>{e.nomComplet}</div>
-                  <div style={{ fontSize: 13, color: "#888" }}>{e.classe}</div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: "#002D6F" }}>{e.nomComplet}</div>
+                  <div style={{ fontSize: 13, color: "#0066CC" }}>{e.classe}</div>
                 </div>
               </div>
             ))}
             {etudiants.length > 50 && (
-              <p style={{ textAlign: "center", color: "#888", marginTop: 14, fontSize: 13 }}>
+              <p style={{ textAlign: "center", color: "#0066CC", marginTop: 14, fontSize: 13 }}>
                 ... et {etudiants.length - 50} autres
               </p>
             )}
@@ -1688,7 +1718,7 @@ function AdminDelegues({ delegues, config, onReload }) {
   return (
     <div>
       <Card>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20 }}>👥 Gestion des Délégués</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>👥 Gestion des Délégués</h3>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {delegues.map(del => (
@@ -1697,12 +1727,13 @@ function AdminDelegues({ delegues, config, onReload }) {
               justifyContent: "space-between",
               alignItems: "center",
               padding: 16,
-              background: "#f8f8f8",
-              borderRadius: 12
+              background: "#F5F8FA",
+              borderRadius: 14,
+              border: "2px solid #E8F4FF"
             }}>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 16 }}>{del.classe} - {del.nom}</div>
-                <div style={{ fontSize: 13, color: "#888" }}>Délégué de classe</div>
+                <div style={{ fontWeight: 700, fontSize: 16, color: "#002D6F" }}>{del.classe} - {del.nom}</div>
+                <div style={{ fontSize: 13, color: "#0066CC", fontWeight: 600 }}>Délégué de classe</div>
               </div>
               <div style={{ display: "flex", gap: 10 }}>
                 <Button
@@ -1781,31 +1812,31 @@ function EditDelegueNomModal({ delegue, onClose, onSuccess }) {
   return (
     <div style={{
       position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-      background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center",
-      justifyContent: "center", zIndex: 9999, padding: 20
+      background: "rgba(0, 45, 111, 0.7)", display: "flex", alignItems: "center",
+      justifyContent: "center", zIndex: 9999, padding: 20, backdropFilter: "blur(4px)"
     }}>
-      <Card style={{ maxWidth: 440, width: "100%" }}>
+      <Card style={{ maxWidth: 460, width: "100%" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-          <h2 style={{ margin: 0, fontSize: 20 }}>✏️ Modifier le délégué - {delegue.classe}</h2>
-          <button onClick={onClose} style={{ border: "none", background: "none", fontSize: 28, cursor: "pointer", color: "#888" }}>×</button>
+          <h2 style={{ margin: 0, fontSize: 22, color: "#002D6F" }}>✏️ Modifier le délégué - {delegue.classe}</h2>
+          <button onClick={onClose} style={{ border: "none", background: "none", fontSize: 32, cursor: "pointer", color: "#0066CC" }}>×</button>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Nom du délégué</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Nom du délégué</label>
             <input
               type="text"
               value={nouveauNom}
               onChange={e => setNouveauNom(e.target.value)}
               placeholder="Ex: KONAN Jean"
               style={{
-                width: "100%", border: "2px solid #eee", borderRadius: 10,
+                width: "100%", border: "2px solid #E8F4FF", borderRadius: 12,
                 padding: "12px 16px", fontSize: 14, outline: "none", boxSizing: "border-box"
               }}
             />
           </div>
 
-          {error && <p style={{ color: "#cc0000", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
+          {error && <p style={{ color: "#DC2626", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
 
           <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
             <Button onClick={handleSubmit} disabled={loading} style={{ flex: 1 }}>
@@ -1868,47 +1899,47 @@ function ResetDelegueCodeModal({ delegue, onClose, onSuccess }) {
   return (
     <div style={{
       position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-      background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center",
-      justifyContent: "center", zIndex: 9999, padding: 20
+      background: "rgba(0, 45, 111, 0.7)", display: "flex", alignItems: "center",
+      justifyContent: "center", zIndex: 9999, padding: 20, backdropFilter: "blur(4px)"
     }}>
-      <Card style={{ maxWidth: 440, width: "100%" }}>
+      <Card style={{ maxWidth: 460, width: "100%" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-          <h2 style={{ margin: 0, fontSize: 20 }}>🔑 Nouveau code - {delegue.classe}</h2>
-          <button onClick={onClose} style={{ border: "none", background: "none", fontSize: 28, cursor: "pointer", color: "#888" }}>×</button>
+          <h2 style={{ margin: 0, fontSize: 22, color: "#002D6F" }}>🔑 Nouveau code - {delegue.classe}</h2>
+          <button onClick={onClose} style={{ border: "none", background: "none", fontSize: 32, cursor: "pointer", color: "#0066CC" }}>×</button>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <p style={{ fontSize: 13, color: "#666" }}>Délégué : <strong>{delegue.nom}</strong></p>
+          <p style={{ fontSize: 13, color: "#0066CC" }}>Délégué : <strong>{delegue.nom}</strong></p>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Nouveau code</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Nouveau code</label>
             <input
               type="password"
               value={nouveauCode}
               onChange={e => setNouveauCode(e.target.value)}
               placeholder="Minimum 6 caractères"
               style={{
-                width: "100%", border: "2px solid #eee", borderRadius: 10,
+                width: "100%", border: "2px solid #E8F4FF", borderRadius: 12,
                 padding: "12px 16px", fontSize: 14, outline: "none", boxSizing: "border-box"
               }}
             />
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#888", display: "block", marginBottom: 8 }}>Confirmer</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 8 }}>Confirmer</label>
             <input
               type="password"
               value={confirmation}
               onChange={e => setConfirmation(e.target.value)}
               placeholder="Retapez le code"
               style={{
-                width: "100%", border: "2px solid #eee", borderRadius: 10,
+                width: "100%", border: "2px solid #E8F4FF", borderRadius: 12,
                 padding: "12px 16px", fontSize: 14, outline: "none", boxSizing: "border-box"
               }}
             />
           </div>
 
-          {error && <p style={{ color: "#cc0000", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
+          {error && <p style={{ color: "#DC2626", fontSize: 13, margin: 0 }}>⚠️ {error}</p>}
 
           <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
             <Button onClick={handleSubmit} disabled={loading} style={{ flex: 1 }}>
@@ -2116,6 +2147,39 @@ export default function App() {
     }
   };
 
+  const handleChangeAdminPassword = async (codeActuel, nouveauCode) => {
+    try {
+      const hashActuel = await hashCode(codeActuel);
+      
+      const adminSnap = await getDocs(collection(db, "admins"));
+      let adminDoc = null;
+      
+      adminSnap.forEach(d => {
+        if (d.id === user.adminId) {
+          adminDoc = d;
+        }
+      });
+
+      if (!adminDoc) {
+        throw new Error("Admin non trouvé");
+      }
+
+      const data = adminDoc.data();
+      if (data.codeHash !== hashActuel) {
+        throw new Error("Code actuel incorrect");
+      }
+
+      const nouveauHash = await hashCode(nouveauCode);
+      await updateDoc(doc(db, "admins", adminDoc.id), {
+        codeHash: nouveauHash,
+        dateModification: new Date().toISOString()
+      });
+
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
     <>
       <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
@@ -2123,9 +2187,9 @@ export default function App() {
       {notification && (
         <div style={{
           position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)",
-          background: notification.type === "error" ? "#cc0000" : "#007a3d",
-          color: "#fff", borderRadius: 14, padding: "14px 24px", fontSize: 14,
-          fontWeight: 600, zIndex: 9999, boxShadow: "0 6px 24px rgba(0,0,0,0.25)",
+          background: notification.type === "error" ? "#DC2626" : "#16A34A",
+          color: "#fff", borderRadius: 16, padding: "16px 28px", fontSize: 14,
+          fontWeight: 600, zIndex: 9999, boxShadow: "0 8px 28px rgba(0, 71, 171, 0.35)",
           fontFamily: "'Syne', sans-serif", maxWidth: "90%", textAlign: "center"
         }}>
           {notification.msg}
@@ -2135,7 +2199,7 @@ export default function App() {
       {!user ? (
         <LoginPage onLogin={setUser} />
       ) : user.role === "admin" ? (
-        <AdminPage user={user} demandes={demandes} onArchiveMois={handleArchiveMois} onDeleteMois={handleDeleteMois} onResetCompteurs={handleResetCompteurs} onUpdatePaiement={handleUpdatePaiement} />
+        <AdminPage user={user} demandes={demandes} onArchiveMois={handleArchiveMois} onDeleteMois={handleDeleteMois} onResetCompteurs={handleResetCompteurs} onUpdatePaiement={handleUpdatePaiement} onChangeAdminPassword={handleChangeAdminPassword} />
       ) : user.role === "delegue" ? (
         <DelegatePage user={user} demandes={demandes} onArchive={handleArchive} onDelete={handleDelete} onUpdatePaiement={handleUpdatePaiement} onChangePassword={handleChangePassword} />
       ) : (
@@ -2144,7 +2208,7 @@ export default function App() {
 
       {user && (
         <div style={{ position: "fixed", bottom: 20, right: 20 }}>
-          <Button variant="secondary" onClick={() => setUser(null)} style={{ fontSize: 13, padding: "10px 20px" }}>
+          <Button variant="secondary" onClick={() => setUser(null)} style={{ fontSize: 13, padding: "10px 20px", boxShadow: "0 4px 16px rgba(0, 71, 171, 0.2)" }}>
             Déconnexion
           </Button>
         </div>
