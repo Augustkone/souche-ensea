@@ -1,79 +1,181 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where, doc, updateDoc, addDoc } from "firebase/firestore";
+import { hashCode } from "./utils/hash";
 
+// Configuration Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCfkkIX_oUfpju3gaecsBPcPC6Aur0ROTE",
+  apiKey: "AIzaSyC0cXK_GoSYzfXHvqCOBuCrQfbfWd-u1ig",
   authDomain: "souche-ensea.firebaseapp.com",
   projectId: "souche-ensea",
   storageBucket: "souche-ensea.firebasestorage.app",
-  messagingSenderId: "786897721908",
-  appId: "1:786897721908:web:1eb074a27243c83b2ac861"
+  messagingSenderId: "341685742788",
+  appId: "1:341685742788:web:93d5fc6d0a3cbe8e8dc99f"
 };
 
+// Initialisation
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
 // ============================================================
-// HELPERS POUR LIRE LES DONNÉES
+// FONCTIONS CONFIGURATION
 // ============================================================
 
-// Récupérer la configuration
-export const getConfig = async () => {
-  const docRef = doc(db, "config", "settings");
-  const docSnap = await getDoc(docRef);
-  return docSnap.exists() ? docSnap.data() : null;
-};
-
-// Vérifier un admin
-export const verifyAdmin = async (codeHash) => {
-  const adminsRef = collection(db, "admins");
-  const snapshot = await getDocs(adminsRef);
-  
-  for (const docSnap of snapshot.docs) {
-    const data = docSnap.data();
-    if (data.codeHash === codeHash) {
-      return { id: docSnap.id, ...data };
+export async function getConfig() {
+  try {
+    const configDoc = await getDocs(collection(db, "config"));
+    if (!configDoc.empty) {
+      return configDoc.docs[0].data();
     }
+    return null;
+  } catch (error) {
+    console.error("Erreur getConfig:", error);
+    return null;
   }
-  
-  return null;
-};
+}
 
-// Vérifier un délégué
-export const verifyDelegue = async (codeHash) => {
-  const deleguesRef = collection(db, "delegues");
-  const snapshot = await getDocs(deleguesRef);
-  
-  for (const docSnap of snapshot.docs) {
-    const data = docSnap.data();
-    if (data.codeHash === codeHash) {
-      return { id: docSnap.id, ...data };
+// ============================================================
+// FONCTIONS AUTHENTIFICATION
+// ============================================================
+
+export async function verifyAdmin(codeHash) {
+  try {
+    const snapshot = await getDocs(collection(db, "admins"));
+    const admin = snapshot.docs.find(doc => doc.data().codeHash === codeHash);
+    if (admin) {
+      return { id: admin.id, ...admin.data() };
     }
+    return null;
+  } catch (error) {
+    console.error("Erreur verifyAdmin:", error);
+    return null;
   }
+}
+
+export async function verifyDelegue(codeHash) {
+  try {
+    const snapshot = await getDocs(collection(db, "delegues"));
+    const delegue = snapshot.docs.find(doc => doc.data().codeHash === codeHash);
+    if (delegue) {
+      return { id: delegue.id, ...delegue.data() };
+    }
+    return null;
+  } catch (error) {
+    console.error("Erreur verifyDelegue:", error);
+    return null;
+  }
+}
+
+// ============================================================
+// FONCTIONS ÉTUDIANTS
+// ============================================================
+
+export async function getEtudiantsByClasse(classe) {
+  try {
+    const q = query(collection(db, "etudiants"), where("classe", "==", classe));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error("Erreur getEtudiantsByClasse:", error);
+    return [];
+  }
+}
+
+export async function getAllEtudiants() {
+  try {
+    const snapshot = await getDocs(collection(db, "etudiants"));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error("Erreur getAllEtudiants:", error);
+    return [];
+  }
+}
+
+// ============================================================
+// FONCTIONS DÉLÉGUÉS
+// ============================================================
+
+export async function getAllDelegues() {
+  try {
+    const snapshot = await getDocs(collection(db, "delegues"));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error("Erreur getAllDelegues:", error);
+    return [];
+  }
+}
+
+// ============================================================
+// FONCTIONS RESET PASSWORD
+// ============================================================
+
+export async function findUserByEmail(email) {
+  const emailLower = email.toLowerCase();
   
+  // Cherche dans étudiants
+  const etudiantsSnap = await getDocs(query(collection(db, "etudiants"), where("email", "==", emailLower)));
+  if (!etudiantsSnap.empty) {
+    const userData = etudiantsSnap.docs[0];
+    return { type: "etudiant", user: { id: userData.id, ...userData.data() } };
+  }
+
+  // Cherche dans délégués
+  const deleguesSnap = await getDocs(query(collection(db, "delegues"), where("email", "==", emailLower)));
+  if (!deleguesSnap.empty) {
+    const userData = deleguesSnap.docs[0];
+    return { type: "delegue", user: { id: userData.id, ...userData.data() } };
+  }
+
+  // Cherche dans admins
+  const adminsSnap = await getDocs(query(collection(db, "admins"), where("email", "==", emailLower)));
+  if (!adminsSnap.empty) {
+    const userData = adminsSnap.docs[0];
+    return { type: "admin", user: { id: userData.id, ...userData.data() } };
+  }
+
   return null;
-};
+}
 
-// Récupérer les étudiants d'une classe
-export const getEtudiantsByClasse = async (classe) => {
-  const etudiantsRef = collection(db, "etudiants");
-  const q = query(etudiantsRef, where("classe", "==", classe), where("actif", "==", true));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => a.nomComplet.localeCompare(b.nomComplet));
-};
+export async function createResetCode(email, code, userType, userId) {
+  const expiresAt = new Date();
+  expiresAt.setMinutes(expiresAt.getMinutes() + 15);
 
-// Récupérer tous les étudiants
-export const getAllEtudiants = async () => {
-  const etudiantsRef = collection(db, "etudiants");
-  const q = query(etudiantsRef, where("actif", "==", true));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => a.nomComplet.localeCompare(b.nomComplet));
-};
+  await addDoc(collection(db, "reset_codes"), {
+    email: email.toLowerCase(),
+    code,
+    userType,
+    userId,
+    expiresAt: expiresAt.toISOString(),
+    used: false,
+    createdAt: new Date().toISOString()
+  });
+}
 
-// Récupérer tous les délégués
-export const getAllDelegues = async () => {
-  const deleguesRef = collection(db, "delegues");
-  const snapshot = await getDocs(deleguesRef);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => a.classe.localeCompare(b.classe));
-};
+export async function verifyResetCode(email, code) {
+  const snap = await getDocs(
+    query(
+      collection(db, "reset_codes"),
+      where("email", "==", email.toLowerCase()),
+      where("code", "==", code),
+      where("used", "==", false)
+    )
+  );
 
+  if (snap.empty) return null;
+
+  const resetDoc = snap.docs[0];
+  const data = resetDoc.data();
+
+  // Vérifie expiration
+  if (new Date(data.expiresAt) < new Date()) {
+    return null;
+  }
+
+  return { id: resetDoc.id, ...data };
+}
+
+export async function markResetCodeUsed(resetCodeId) {
+  await updateDoc(doc(db, "reset_codes", resetCodeId), { 
+    used: true,
+    usedAt: new Date().toISOString()
+  });
+}
