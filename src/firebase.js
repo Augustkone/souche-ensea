@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, query, where, doc, updateDoc, addDoc } from "firebase/firestore";
-import { hashCode } from "./utils/hash";
+//import { hashCode } from "./utils/hash";
 
 // Configuration Firebase
 const firebaseConfig = {
