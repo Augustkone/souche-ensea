@@ -1,7 +1,5 @@
 export async function sendResetCode(email, code, nomComplet) {
-  console.log('📧 Appel API serverless...');
-  console.log('Email:', email);
-  console.log('Code:', code);
+  console.log('📧 Appel fonction serverless...');
   
   try {
     const response = await fetch('/api/send-reset-code', {
@@ -15,7 +13,7 @@ export async function sendResetCode(email, code, nomComplet) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('❌ Erreur API:', data);
+      console.error('❌ Erreur:', data);
       return { success: false, error: data.error };
     }
 
@@ -30,3 +28,4 @@ export async function sendResetCode(email, code, nomComplet) {
 export function generateResetCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
+

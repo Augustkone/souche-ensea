@@ -877,7 +877,7 @@ function AdminHistorique({ demandes, config }) {
                     <td style={{ padding: 12, textAlign: "center" }}>
                       {d.statut === "traitee" ? (
                         <span style={{ background: "#F0FDF4", color: "#16A34A", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #DCFCE7" }}>✓ TRAITÉE</span>
-                      ) : (
+                      ) : (        
                         <span style={{ background: "#E8F4FF", color: "#0047AB", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #0066CC" }}>⏳ ACTIVE</span>
                       )}
                     </td>
