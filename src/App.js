@@ -184,7 +184,7 @@ function ForgotPasswordModal({ onClose }) {
       await updateDoc(doc(db, collectionName, resetData.user.id), { codeHash: hash, dateModification: new Date().toISOString() });
       const resetCodeData = await verifyResetCode(email.toLowerCase(), code);
       await markResetCodeUsed(resetCodeData.id);
-      alert("✅ Mot de passe réinitialisé avec succès !");
+      alert(" Mot de passe réinitialisé avec succès !");
       onClose();
       window.location.reload();
     } catch (err) {
@@ -637,7 +637,7 @@ function ChangePasswordModal({ user, onClose, onChangePassword }) {
     setLoading(true);
     try {
       await onChangePassword(codeActuel, nouveauCode);
-      alert("✅ Mot de passe modifié !");
+      alert(" Mot de passe modifié !");
       window.location.reload();
     } catch (err) {
       setError(err.message || "Erreur");
@@ -699,7 +699,7 @@ function AdminPage({ user, demandes, onArchiveMois, onDeleteMois, onResetCompteu
       {showChangePassword && <ChangePasswordModal user={user} onClose={() => setShowChangePassword(false)} onChangePassword={onChangeAdminPassword} />}
 
       <div style={{ display: "flex", gap: 10, marginBottom: 24, overflowX: "auto" }}>
-        <Button variant={tab === "dashboard" ? "primary" : "secondary"} onClick={() => setTab("dashboard")}>📊 Dashboard</Button>
+        <Button variant={tab === "dashboard" ? "primary" : "secondary"} onClick={() => setTab("dashboard")}> Dashboard</Button>
         <Button variant={tab === "historique" ? "primary" : "secondary"} onClick={() => setTab("historique")}>📜 Historique</Button>
         <Button variant={tab === "etudiants" ? "primary" : "secondary"} onClick={() => setTab("etudiants")}>👨‍🎓 Étudiants</Button>
         <Button variant={tab === "delegues" ? "primary" : "secondary"} onClick={() => setTab("delegues")}>👥 Délégués</Button>
@@ -751,7 +751,7 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
       </div>
 
       <Card style={{ marginBottom: 24 }}>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>📊 Par classe</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}> Par classe</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {statsByClasse.map(stat => (
             <div key={stat.classe} style={{ display: "flex", justifyContent: "space-between", padding: 16, background: "#F5F8FA", borderRadius: 14, border: "2px solid #E8F4FF" }}>
@@ -876,7 +876,7 @@ function AdminHistorique({ demandes, config }) {
                     <td style={{ padding: 12, textAlign: "right", fontWeight: 600, color: "#16A34A" }}>{(d.nbSouches * PRIX_SOUCHE).toLocaleString()} F</td>
                     <td style={{ padding: 12, textAlign: "center" }}>
                       {d.statut === "traitee" ? (
-                        <span style={{ background: "#F0FDF4", color: "#16A34A", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #DCFCE7" }}>✓ TRAITÉE</span>
+                        <span style={{ background: "#F0FDF4", color: "#16A34A", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #DCFCE7" }}> TRAITÉE</span>
                       ) : (        
                         <span style={{ background: "#E8F4FF", color: "#0047AB", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #0066CC" }}>⏳ ACTIVE</span>
                       )}
@@ -1037,7 +1037,7 @@ function AdminEtudiants({ etudiants, config, onReload }) {
         ) : (
           <div>
             <p style={{ fontSize: 14, marginBottom: 10, color: "#002D6F" }}>📄 {fichier.name}</p>
-            <p style={{ fontSize: 14, marginBottom: 16, color: "#002D6F" }}>✅ {etudiantsPreview.length} étudiants</p>
+            <p style={{ fontSize: 14, marginBottom: 16, color: "#002D6F" }}> {etudiantsPreview.length} étudiants</p>
             {importing ? (
               <div>
                 <div style={{ width: "100%", height: 24, background: "#E8F4FF", borderRadius: 12, overflow: "hidden", marginBottom: 12 }}>
@@ -1047,7 +1047,7 @@ function AdminEtudiants({ etudiants, config, onReload }) {
               </div>
             ) : (
               <div style={{ display: "flex", gap: 12 }}>
-                <Button onClick={handleImport}>✅ Importer</Button>
+                <Button onClick={handleImport}> Importer</Button>
                 <Button variant="secondary" onClick={() => { setFichier(null); setEtudiantsPreview([]); }}>❌ Annuler</Button>
               </div>
             )}
@@ -1084,7 +1084,7 @@ function EditDelegueNomModal({ delegue, onClose, onSuccess }) {
         nom: nom.trim().toUpperCase(),
         dateModification: new Date().toISOString()
       });
-      alert(`✅ Nom modifié pour ${delegue.classe} !`);
+      alert(` Nom modifié pour ${delegue.classe} !`);
       onSuccess();
       onClose();
     } catch (err) {
@@ -1163,7 +1163,7 @@ function EditDelegueEmailModal({ delegue, onClose, onSuccess }) {
     setLoading(true);
     try {
       await updateDoc(doc(db, "delegues", delegue.id), { email: email.toLowerCase() });
-      alert(`✅ Email modifié !`);
+      alert(` Email modifié !`);
       onSuccess();
       onClose();
     } catch (err) {
@@ -1220,7 +1220,7 @@ export default function App() {
   const handleDemander = async (nbSouches) => {
     try {
       await addDoc(collection(db, "demandes"), { nom: user.nom, classe: user.classe, nbSouches, mois: getCurrentMois(), date: new Date().toISOString(), montantPaye: 0, statut: "active" });
-      showNotif(`✅ Demande enregistrée !`);
+      showNotif(` Demande enregistrée !`);
     } catch (error) {
       showNotif("Erreur", "error");
     }
