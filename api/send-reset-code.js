@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     }
   });
 
-  // Contenu de l'email
+  // Contenu de l'email - Compatible Gmail ET Outlook
   const mailOptions = {
     from: `"SoucheApp ENSEA" <${process.env.GMAIL_USER}>`,
     to: email,
@@ -39,50 +39,102 @@ export default async function handler(req, res) {
       <html>
       <head>
         <meta charset="utf-8">
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #0047AB, #0066CC); padding: 30px; text-align: center; border-radius: 12px 12px 0 0; }
-          .header h1 { color: white; margin: 0; font-size: 28px; }
-          .content { background: white; padding: 30px; border: 1px solid #E8F4FF; }
-          .code-box { background: linear-gradient(135deg, #0047AB, #0066CC); color: white; font-size: 36px; font-weight: bold; text-align: center; padding: 25px; border-radius: 12px; letter-spacing: 10px; margin: 30px 0; }
-          .warning { background: #FFF0F0; border-left: 4px solid #DC2626; padding: 15px; margin: 25px 0; border-radius: 8px; }
-          .warning p { margin: 0; color: #DC2626; font-weight: 600; font-size: 14px; }
-          .footer { background: #F5F8FA; padding: 20px; text-align: center; border-radius: 0 0 12px 12px; }
-          .footer p { margin: 0; font-size: 12px; color: #888; }
-        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>SoucheApp ENSEA</h1>
-          </div>
-          
-          <div class="content">
-            <p style="font-size: 16px; color: #002D6F; margin-bottom: 20px;">
-              Bonjour <strong>${nomComplet}</strong>,
-            </p>
-            
-            <p style="font-size: 15px; color: #555; margin-bottom: 30px;">
-              Vous avez demandé la réinitialisation de votre mot de passe. Voici votre code de vérification :
-            </p>
-            
-            <div class="code-box">${code}</div>
-            
-            <div class="warning">
-              <p>Ce code expire dans 15 minutes</p>
-            </div>
-            
-            <p style="font-size: 14px; color: #888; margin-top: 30px;">
-              Si vous n'avez pas demandé cette réinitialisation, ignorez cet email en toute sécurité.
-            </p>
-          </div>
-          
-          <div class="footer">
-            <p>École Nationale Supérieure de la Statistique et de l'Économie Appliquée</p>
-            <p>Abidjan, Côte d'Ivoire</p>
-          </div>
-        </div>
+      <body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5;">
+          <tr>
+            <td align="center" style="padding: 20px;">
+              
+              <!-- Container principal -->
+              <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; background-color: #ffffff;">
+                
+                <!-- Header bleu -->
+                <tr>
+                  <td align="center" style="background: linear-gradient(135deg, #0047AB, #0066CC); padding: 30px; border-radius: 12px 12px 0 0;">
+                    <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">SoucheApp ENSEA</h1>
+                  </td>
+                </tr>
+                
+                <!-- Contenu -->
+                <tr>
+                  <td style="padding: 30px; border-left: 1px solid #E8F4FF; border-right: 1px solid #E8F4FF;">
+                    
+                    <!-- Salutation -->
+                    <p style="font-size: 16px; color: #002D6F; margin: 0 0 20px 0;">
+                      Bonjour <strong>${nomComplet}</strong>,
+                    </p>
+                    
+                    <!-- Message -->
+                    <p style="font-size: 15px; color: #555555; margin: 0 0 30px 0; line-height: 1.6;">
+                      Vous avez demandé la réinitialisation de votre mot de passe. Voici votre code de vérification :
+                    </p>
+                    
+                    <!-- CODE - Box bleue avec gradient (Gmail) + Fallback texte (Outlook) -->
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 30px 0;">
+                      <tr>
+                        <td align="center">
+                          <!-- Box bleue avec code -->
+                          <table cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(135deg, #0047AB, #0066CC); border-radius: 12px; margin: 0 auto;">
+                            <tr>
+                              <td align="center" style="padding: 25px 40px;">
+                                <span style="color: #ffffff; font-size: 36px; font-weight: bold; letter-spacing: 10px; font-family: Arial, sans-serif;">
+                                  ${code}
+                                </span>
+                              </td>
+                            </tr>
+                          </table>
+                          
+                          <!-- Fallback pour Outlook (si gradient ne marche pas) -->
+                          <!--[if mso]>
+                          <table cellpadding="0" cellspacing="0" border="0" style="background-color: #0047AB; border-radius: 12px; margin: 20px auto;">
+                            <tr>
+                              <td align="center" style="padding: 25px 40px;">
+                                <span style="color: #ffffff; font-size: 36px; font-weight: bold; letter-spacing: 10px;">
+                                  ${code}
+                                </span>
+                              </td>
+                            </tr>
+                          </table>
+                          <![endif]-->
+                        </td>
+                      </tr>
+                    </table>
+                    
+                    <!-- Avertissement expiration -->
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 25px 0; background-color: #FFF0F0; border-left: 4px solid #DC2626; border-radius: 8px;">
+                      <tr>
+                        <td style="padding: 15px;">
+                          <p style="margin: 0; color: #DC2626; font-weight: 600; font-size: 14px;">
+                            Ce code expire dans 15 minutes
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                    
+                    <!-- Note sécurité -->
+                    <p style="font-size: 14px; color: #888888; margin: 30px 0 0 0; line-height: 1.6;">
+                      Si vous n'avez pas demandé cette réinitialisation, ignorez cet email en toute sécurité.
+                    </p>
+                    
+                  </td>
+                </tr>
+                
+                <!-- Footer -->
+                <tr>
+                  <td align="center" style="background-color: #F5F8FA; padding: 20px; border-radius: 0 0 12px 12px;">
+                    <p style="margin: 0; font-size: 12px; color: #888888; line-height: 1.6;">
+                      École Nationale Supérieure de la Statistique et de l'Économie Appliquée<br/>
+                      Abidjan, Côte d'Ivoire
+                    </p>
+                  </td>
+                </tr>
+                
+              </table>
+              
+            </td>
+          </tr>
+        </table>
       </body>
       </html>
     `
