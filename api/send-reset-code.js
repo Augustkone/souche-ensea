@@ -10,6 +10,7 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
     }
   });
 
-  // Contenu de l'email - Compatible Gmail ET Outlook
+  // Contenu de l'email - Compatible TOUS clients
   const mailOptions = {
     from: `"SoucheApp ENSEA" <${process.env.GMAIL_USER}>`,
     to: email,
@@ -70,11 +71,21 @@ export default async function handler(req, res) {
                       Vous avez demandé la réinitialisation de votre mot de passe. Voici votre code de vérification :
                     </p>
                     
-                    <!-- CODE - Box bleue avec gradient (Gmail) + Fallback texte (Outlook) -->
+                    <!-- CODE EN TEXTE SIMPLE (toujours visible) -->
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
+                      <tr>
+                        <td align="center">
+                          <p style="margin: 0; font-size: 42px; font-weight: bold; color: #0047AB; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+                            ${code}
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                    
+                    <!-- CODE EN BOX BLEUE (pour Gmail - design amélioré) -->
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 30px 0;">
                       <tr>
                         <td align="center">
-                          <!-- Box bleue avec code -->
                           <table cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(135deg, #0047AB, #0066CC); border-radius: 12px; margin: 0 auto;">
                             <tr>
                               <td align="center" style="padding: 25px 40px;">
@@ -84,19 +95,6 @@ export default async function handler(req, res) {
                               </td>
                             </tr>
                           </table>
-                          
-                          <!-- Fallback pour Outlook (si gradient ne marche pas) -->
-                          <!--[if mso]>
-                          <table cellpadding="0" cellspacing="0" border="0" style="background-color: #0047AB; border-radius: 12px; margin: 20px auto;">
-                            <tr>
-                              <td align="center" style="padding: 25px 40px;">
-                                <span style="color: #ffffff; font-size: 36px; font-weight: bold; letter-spacing: 10px;">
-                                  ${code}
-                                </span>
-                              </td>
-                            </tr>
-                          </table>
-                          <![endif]-->
                         </td>
                       </tr>
                     </table>
