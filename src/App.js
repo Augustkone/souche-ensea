@@ -4,7 +4,9 @@ import { collection, addDoc, deleteDoc, doc, onSnapshot, updateDoc, writeBatch, 
 import { hashCode } from "./utils/hash";
 import { sendResetCode, generateResetCode } from "./emailService";
 import * as XLSX from 'xlsx';
-
+import StatistiquesEtudiant from './components/StatistiquesEtudiant';
+import StatistiquesDelegue from './components/StatistiquesDelegue';
+import GestionHistorique from './components/GestionHistorique';
 const PRIX_SOUCHE = 2000;
 const MAX_SOUCHES_PAR_MOIS = 3;
 
@@ -466,6 +468,8 @@ function EtudiantPage({ user, demandes, onDemander, onAnnuler, onChangePassword 
           </ul>
         </div>
       </Card>
+      {/* NOUVEAU : Statistiques de l'étudiant */}
+      <StatistiquesEtudiant user={user} demandes={demandes} />
 
       {mesDemandesActives.length > 0 && (
         <Card style={{ marginBottom: 16 }}>
@@ -531,6 +535,7 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
         <Badge color="#0066CC">Délégué {user.classe}</Badge>
       </div>
 
+
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 20 }}>
         <Card style={{ background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" }}>
           <div style={{ fontSize: 11, opacity: 0.9, textTransform: "uppercase", fontWeight: 600 }}>Demandes</div>
@@ -546,6 +551,7 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
           <div style={{ fontSize: 11, opacity: 0.8 }}>FCFA</div>
         </Card>
       </div>
+       <StatistiquesDelegue demandes={demandes} classe={user.classe} />
 
       <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
         <Button onClick={exportExcel} variant="success" style={{ flex: 1 }}>📥 Excel</Button>
@@ -604,7 +610,6 @@ function DelegatePage({ user, demandes, onArchive, onDelete, onUpdatePaiement, o
           );
         })}
       </div>
-
       {demandesMois.length > 0 && (
         <div style={{ marginTop: 20 }}>
           <Button onClick={() => setShowActionMenu(!showActionMenu)} style={{ width: "100%", background: "linear-gradient(135deg, #0047AB, #0066CC)", color: "#fff" }}>⚙️ Actions ({demandesMois.length}) {showActionMenu ? "▲" : "▼"}</Button>
@@ -800,33 +805,104 @@ function AdminDashboard({ demandes, etudiants, delegues, config, onArchiveMois, 
     </div>
   );
 }
-
 function AdminHistorique({ demandes, config }) {
   const [filtreClasse, setFiltreClasse] = useState("toutes");
   const [filtreMois, setFiltreMois] = useState("tous");
+  
   const classes = config ? config.classes : [];
   const moisUniques = [...new Set(demandes.map(d => d.mois))].sort().reverse();
+  
+  // Filtrer les demandes
   let demandesFiltrees = demandes;
-  if (filtreClasse !== "toutes") demandesFiltrees = demandesFiltrees.filter(d => d.classe === filtreClasse);
-  if (filtreMois !== "tous") demandesFiltrees = demandesFiltrees.filter(d => d.mois === filtreMois);
+  if (filtreClasse !== "toutes") {
+    demandesFiltrees = demandesFiltrees.filter(d => d.classe === filtreClasse);
+  }
+  if (filtreMois !== "tous") {
+    demandesFiltrees = demandesFiltrees.filter(d => d.mois === filtreMois);
+  }
+  
   const totalSouches = demandesFiltrees.reduce((sum, d) => sum + d.nbSouches, 0);
   const totalMontant = demandesFiltrees.reduce((sum, d) => sum + (d.nbSouches * PRIX_SOUCHE), 0);
 
+  // Fonction helper pour formater les dates
+  const formatDate = (date) => {
+    if (!date) return "-";
+    
+    try {
+      if (date.toDate && typeof date.toDate === 'function') {
+        return date.toDate().toLocaleDateString('fr-FR');
+      }
+      
+      if (date instanceof Date) {
+        return date.toLocaleDateString('fr-FR');
+      }
+      
+      const dateObj = new Date(date);
+      if (!isNaN(dateObj.getTime())) {
+        return dateObj.toLocaleDateString('fr-FR');
+      }
+      
+      return "-";
+    } catch (error) {
+      console.error('Erreur formatage date:', error);
+      return "-";
+    }
+  };
+
   return (
     <div>
+      {/* ========================================= */}
+      {/* NOUVEAU : Gestion de l'historique        */}
+      {/* ========================================= */}
+      <GestionHistorique 
+        demandes={demandes} 
+        onResetComplete={() => window.location.reload()} 
+      />
+
+      {/* ========================================= */}
+      {/* EXISTANT : Filtres                       */}
+      {/* ========================================= */}
       <Card style={{ marginBottom: 20 }}>
         <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>🔍 Filtres</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 6 }}>Classe</label>
-            <select value={filtreClasse} onChange={e => setFiltreClasse(e.target.value)} style={{ width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "10px 14px", fontSize: 14, outline: "none", color: "#002D6F" }}>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 6 }}>
+              Classe
+            </label>
+            <select 
+              value={filtreClasse} 
+              onChange={e => setFiltreClasse(e.target.value)} 
+              style={{ 
+                width: "100%", 
+                border: "2px solid #E8F4FF", 
+                borderRadius: 12, 
+                padding: "10px 14px", 
+                fontSize: 14, 
+                outline: "none", 
+                color: "#002D6F" 
+              }}
+            >
               <option value="toutes">Toutes</option>
               {classes.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 6 }}>Mois</label>
-            <select value={filtreMois} onChange={e => setFiltreMois(e.target.value)} style={{ width: "100%", border: "2px solid #E8F4FF", borderRadius: 12, padding: "10px 14px", fontSize: 14, outline: "none", color: "#002D6F" }}>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#0066CC", display: "block", marginBottom: 6 }}>
+              Mois
+            </label>
+            <select 
+              value={filtreMois} 
+              onChange={e => setFiltreMois(e.target.value)} 
+              style={{ 
+                width: "100%", 
+                border: "2px solid #E8F4FF", 
+                borderRadius: 12, 
+                padding: "10px 14px", 
+                fontSize: 14, 
+                outline: "none", 
+                color: "#002D6F" 
+              }}
+            >
               <option value="tous">Tous</option>
               {moisUniques.map(m => <option key={m} value={m}>{m}</option>)}
             </select>
@@ -834,6 +910,9 @@ function AdminHistorique({ demandes, config }) {
         </div>
       </Card>
 
+      {/* ========================================= */}
+      {/* EXISTANT : Stats filtrées                */}
+      {/* ========================================= */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 20 }}>
         <Card style={{ background: "#F5F8FA", border: "2px solid #E8F4FF" }}>
           <div style={{ fontSize: 12, color: "#0066CC", marginBottom: 6, fontWeight: 700 }}>DEMANDES</div>
@@ -849,8 +928,13 @@ function AdminHistorique({ demandes, config }) {
         </Card>
       </div>
 
+      {/* ========================================= */}
+      {/* EXISTANT : Tableau historique            */}
+      {/* ========================================= */}
       <Card>
-        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>📜 Historique ({demandesFiltrees.length})</h3>
+        <h3 style={{ margin: "0 0 20px 0", fontSize: 20, color: "#002D6F" }}>
+          📜 Historique ({demandesFiltrees.length})
+        </h3>
         {demandesFiltrees.length === 0 ? (
           <p style={{ textAlign: "center", color: "#888", padding: 40 }}>Aucune demande</p>
         ) : (
@@ -869,16 +953,40 @@ function AdminHistorique({ demandes, config }) {
               <tbody>
                 {demandesFiltrees.map(d => (
                   <tr key={d.id} style={{ borderBottom: "1px solid #E8F4FF" }}>
-                    <td style={{ padding: 12, color: "#002D6F" }}>{d.date ? new Date(d.date).toLocaleDateString('fr-FR') : "-"}</td>
+                    <td style={{ padding: 12, color: "#002D6F" }}>{formatDate(d.date)}</td>
                     <td style={{ padding: 12, fontWeight: 600, color: "#002D6F" }}>{d.nom}</td>
                     <td style={{ padding: 12, color: "#0066CC" }}>{d.classe}</td>
-                    <td style={{ padding: 12, textAlign: "center", fontWeight: 700, color: "#0047AB" }}>{d.nbSouches}</td>
-                    <td style={{ padding: 12, textAlign: "right", fontWeight: 600, color: "#16A34A" }}>{(d.nbSouches * PRIX_SOUCHE).toLocaleString()} F</td>
+                    <td style={{ padding: 12, textAlign: "center", fontWeight: 700, color: "#0047AB" }}>
+                      {d.nbSouches}
+                    </td>
+                    <td style={{ padding: 12, textAlign: "right", fontWeight: 600, color: "#16A34A" }}>
+                      {(d.nbSouches * PRIX_SOUCHE).toLocaleString()} F
+                    </td>
                     <td style={{ padding: 12, textAlign: "center" }}>
                       {d.statut === "traitee" ? (
-                        <span style={{ background: "#F0FDF4", color: "#16A34A", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #DCFCE7" }}> TRAITÉE</span>
-                      ) : (        
-                        <span style={{ background: "#E8F4FF", color: "#0047AB", padding: "4px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, border: "2px solid #0066CC" }}>⏳ ACTIVE</span>
+                        <span style={{ 
+                          background: "#F0FDF4", 
+                          color: "#16A34A", 
+                          padding: "4px 10px", 
+                          borderRadius: 20, 
+                          fontSize: 11, 
+                          fontWeight: 700, 
+                          border: "2px solid #DCFCE7" 
+                        }}>
+                          ✅ TRAITÉE
+                        </span>
+                      ) : (
+                        <span style={{ 
+                          background: "#E8F4FF", 
+                          color: "#0047AB", 
+                          padding: "4px 10px", 
+                          borderRadius: 20, 
+                          fontSize: 11, 
+                          fontWeight: 700, 
+                          border: "2px solid #0066CC" 
+                        }}>
+                          ⏳ ACTIVE
+                        </span>
                       )}
                     </td>
                   </tr>
