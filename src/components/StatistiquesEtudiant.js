@@ -21,6 +21,7 @@ const StatistiquesEtudiant = ({ user, demandes }) => {
       console.log(' Demandes non disponibles');
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [demandes, user]);
 
   const calculerStatistiques = () => {

@@ -14,6 +14,7 @@ const StatistiquesDelegue = ({ demandes, classe }) => {
     if (demandes && Array.isArray(demandes)) {
       calculerStatistiques();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [demandes]);
 
   const calculerStatistiques = () => {
