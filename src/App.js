@@ -1325,7 +1325,7 @@ export default function App() {
     setTimeout(() => setNotification(null), 4000);
   };
 
-  cconst handleDemander = async (nbSouches) => {
+  const handleDemander = async (nbSouches) => {
   try {
     // Créer la demande
     await addDoc(collection(db, "demandes"), { 
