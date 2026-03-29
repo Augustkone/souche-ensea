@@ -1325,15 +1325,54 @@ export default function App() {
     setTimeout(() => setNotification(null), 4000);
   };
 
-  const handleDemander = async (nbSouches) => {
+  cconst handleDemander = async (nbSouches) => {
+  try {
+    // Créer la demande
+    await addDoc(collection(db, "demandes"), { 
+      nom: user.nom, 
+      classe: user.classe, 
+      nbSouches, 
+      mois: getCurrentMois(), 
+      date: new Date().toISOString(), 
+      montantPaye: 0, 
+      statut: "active",
+      paye: false  // ← NOUVEAU
+    });
+    
+    showNotif(` Demande enregistrée !`);
+    
+    // ========================================
+    // NOUVEAU : Notification au délégué
+    // ========================================
     try {
-      await addDoc(collection(db, "demandes"), { nom: user.nom, classe: user.classe, nbSouches, mois: getCurrentMois(), date: new Date().toISOString(), montantPaye: 0, statut: "active" });
-      showNotif(` Demande enregistrée !`);
-    } catch (error) {
-      showNotif("Erreur", "error");
+      const delegueSnapshot = await getDocs(
+        query(collection(db, 'delegues'), where('classe', '==', user.classe))
+      );
+      
+      if (!delegueSnapshot.empty) {
+        const emailDelegue = delegueSnapshot.docs[0].data().email;
+        
+        if (emailDelegue) {
+          fetch('/api/send-notification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              emailDelegue,
+              etudiant: user.nom,
+              nbSouches,
+              classe: user.classe
+            })
+          });
+        }
+      }
+    } catch (e) {
+      console.log('Notification ignorée');
     }
-  };
-
+    
+  } catch (error) {
+    showNotif("Erreur", "error");
+  }
+};
   const handleAnnuler = async (id) => {
     try {
       await deleteDoc(doc(db, "demandes", id));
